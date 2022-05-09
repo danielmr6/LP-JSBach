@@ -4,6 +4,7 @@ root : expr EOF ;
 
 expr : expr DIV expr 
     | expr MUL expr 
+    | <assoc=right> expr '^' expr
     | expr ADD expr 
     | expr SUB expr 
     | NUMBER ;
@@ -11,7 +12,8 @@ expr : expr DIV expr
 ADD : '+' ;
 SUB : '-' ;
 MUL : '*' ;
-DIV : ';' ;
+DIV : '/' ;
+
 
 DIGIT   : '0'..'9' ;
 LETTER  : [a-zA-Z] ;

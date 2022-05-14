@@ -1,42 +1,78 @@
 grammar jsbach;
 
-root : stmt* EOF ;
+root : block* EOF ;
 
+block : sentence* ;
 
-stmt : 
-
-    ;
-selectStmt : 'if' expr stmt | 'if' expr stmt 'else' stmt;
-
-iterStmt : 'while' expr 'do' stmt
-    | <assoc=right> ID ASSIG expr 
+sentence 
+    : assigs 
+    | sentenceIf
+    | sentenceWhile 
     ;
 
-condSmt : expr opRel expr;
 
-expr : <assoc=right> expr POW expr 
+sentenceIf : 'if' boolExp sentenceBlock ('else' sentenceBlock)? ;
+
+
+assigs : <assoc=right> ID ASSIG expr ;
+
+
+sentenceBlock 
+    : LFTLMT block RGTLMT 
+    | sentence
+    ;
+
+
+sentenceWhile : 'while' boolExp  sentenceBlock ;
+
+expr 
+    : <assoc=right> expr POW expr 
     | expr (DIV | MUL) expr 
     | expr (ADD | SUB) expr  
-    | LFTLMT expr RGTLMT 
     | relTerm
     ;
-/******Operadors relacionals******/
 
-boolExp : boolExp 'or' boolTerm | boolTerm;
-boolTerm : boolTerm 'and' boolFactor | boolFactor;
-boolFactor : 'not' boolFactor | ( boolExp ) | relExp;
+/**************** Operadors relacionals ****************/
 
-relExp : relTerm opRel relTerm | relTerm ;
+boolExp 
+    : boolExp 'or' boolTerm 
+    | boolTerm
+    ;
 
+
+boolTerm 
+    : boolTerm 'and' boolFactor 
+    | boolFactor
+    ;
+
+
+boolFactor 
+    : 'not' boolFactor 
+    | ( boolExp ) 
+    | relExp
+    ;
+
+
+relExp 
+    : relTerm (EQ | DIF | LST | GRT | GREQ | LSEQ) relTerm 
+    | relTerm 
+    ;
+
+
+relTerm 
+    :  LFTLMT expr RGTLMT
+    | (ID | NUM)
+    ; 
 
 //Retornen 0 com a valor fals i 1 com a valor cert
-opRel : '=' | '/=' | '<' | '>' | '>=' | '<=';
+EQ : '='; 
+DIF : '/='; 
+LST : '<' ;
+GRT : '>' ; 
+GREQ : '>=' ;
+LSEQ :  '<=';
 
-relTerm : (ID | NUM);
-
-
-
-/******Especificació de JSBach******/
+/****************Especificació de JSBach****************/
 ASSIG : '<-' ;
 RD : '<?>' ;
 WR : '!' ;
@@ -49,27 +85,22 @@ COM : '~~~' ;
 /*
 Falta: 
     -Invocació de procediments
-    -Condicional amb if i potser else
-    -Iteracio amb while 
     -Gramatica de llistes i notes: Afegit(<<) i tall de llistes (8<)
-
+    -Lectura
+    -Escriptura
+    -Reproduccio
+    -Ambit de visibilitat
 */
 
-
-
-
-
-/****** Operadors aritmètics ******/
+/**************** Operadors aritmètics ****************/
 ADD : '+' ;
 SUB : '-' ;
 MUL : '*' ;
 DIV : '/' ;
 MOD : '%' ;
 
-/****** Definicions bàsiques ******/
+/**************** Definicions bàsiques ****************/
 DIGIT   : '0'..'9' ;
 ID  : [a-zA-Z] ;
-
 NUM  : (DIGIT)+ ;
-
 WS      : [ \t\n]+ -> skip ;

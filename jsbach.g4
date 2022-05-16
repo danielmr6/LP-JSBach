@@ -2,38 +2,30 @@ grammar jsbach;
 
 root : stmt* EOF ;
 
-//block : stmt* ;
 
 stmt 
     : declFunc
     | callFunc
     | assigs 
     | sentenceIf
-    | sentenceWhile 
+    | sentenceWhile
+    | readStmt
+    | writeStmt 
     ;
 
-/*
-    Falta por añadir la declaración de función y la llamada a función
-*/
-declFunc : ID+ L_LMT(stmt*)R_LMT ;
+declFunc : ID+ L_LMT(stmt*)R_LMT ; //Primer tenim l'ID inicial que representa el nom de la funció, després 0 o més ID (paràmetres).
 
-callFunc:  ID (ID* | expr )+ ;
+callFunc :  ID (ID* | expr )+ ;
  
 
 readStmt : READ ID ;
 
-writeStmt : WRITE (| ID | expr)+ ;
+writeStmt : WRITE (ID | expr)+ ; 
 
 sentenceIf : IF boolExp L_LMT stmt* R_LMT (ELSE L_LMT stmt* R_LMT)? ;
 
 
 assigs : <assoc=right> ID ASSIG expr ;
-
-
-sentenceBlock 
-    : L_LMT stmt*  R_LMT 
-    | stmt
-    ;
 
 
 sentenceWhile : WHILE boolExp  L_LMT stmt* R_LMT ;

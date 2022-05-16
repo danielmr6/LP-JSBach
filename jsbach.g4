@@ -1,68 +1,76 @@
 grammar jsbach;
 
-root : block* EOF ;
+root : stmt* EOF ;
 
-block : sentence* ;
+//block : stmt* ;
 
-sentence 
-    : assigs 
+stmt 
+    : declFunc
+    | callFunc
+    | assigs 
     | sentenceIf
     | sentenceWhile 
     ;
 
+/*
+    Falta por añadir la declaración de función y la llamada a función
+*/
+declFunc : ID+ L_LMT(stmt*)R_LMT ;
 
-sentenceIf : 'if' boolExp sentenceBlock ('else' sentenceBlock)? ;
+callFunc:  ID (ID* | expr )+ ;
+ 
+
+readStmt : READ ID ;
+
+writeStmt : WRITE (| ID | expr)+ ;
+
+sentenceIf : IF boolExp L_LMT stmt* R_LMT (ELSE L_LMT stmt* R_LMT)? ;
 
 
 assigs : <assoc=right> ID ASSIG expr ;
 
 
 sentenceBlock 
-    : LFTLMT block RGTLMT 
-    | sentence
+    : L_LMT stmt*  R_LMT 
+    | stmt
     ;
 
 
-sentenceWhile : 'while' boolExp  sentenceBlock ;
+sentenceWhile : WHILE boolExp  L_LMT stmt* R_LMT ;
 
 expr 
-    : <assoc=right> expr POW expr 
-    | expr (DIV | MUL) expr 
+    : L_LMT expr R_LMT
+    | <assoc=right> expr POW expr 
+    | expr (DIV | MUL | MOD) expr 
     | expr (ADD | SUB) expr  
-    | relTerm
+    | (ID | NUM)
     ;
 
 /**************** Operadors relacionals ****************/
 
 boolExp 
-    : boolExp 'or' boolTerm 
+    : boolExp OR boolTerm 
     | boolTerm
     ;
 
 
 boolTerm 
-    : boolTerm 'and' boolFactor 
+    : boolTerm AND boolFactor 
     | boolFactor
     ;
 
 
 boolFactor 
-    : 'not' boolFactor 
+    : NOT boolFactor 
     | ( boolExp ) 
     | relExp
     ;
 
 
 relExp 
-    : relTerm (EQ | DIF | LST | GRT | GREQ | LSEQ) relTerm 
-    | relTerm 
+    : expr (EQ | DIF | LST | GRT | GREQ | LSEQ) expr 
+    | expr
     ;
-
-
-relTerm 
-    :  LFTLMT expr RGTLMT
-    | (ID | NUM)
-    ; 
 
 //Retornen 0 com a valor fals i 1 com a valor cert
 EQ : '='; 
@@ -73,13 +81,21 @@ GREQ : '>=' ;
 LSEQ :  '<=';
 
 /****************Especificació de JSBach****************/
+IF : 'if' ;
+WHILE : 'while' ;
+ELSE : 'else' ;
+NOT : 'not' ;
+OR : 'or' ;
+AND : 'and' ;
+
 ASSIG : '<-' ;
-RD : '<?>' ;
-WR : '!' ;
+READ : '<?>' ;
+WRITE : '!' ;
 PLAY : '<:>' ;
 
-LFTLMT : '|:' ;
-RGTLMT : ':|' ;
+NOTE : ('A' .. 'G' | '0' .. '8') ; //mirar notación inglesa
+L_LMT : '|:' ;
+R_LMT : ':|' ;
 
 COM : '~~~' ;
 /*
@@ -98,9 +114,19 @@ SUB : '-' ;
 MUL : '*' ;
 DIV : '/' ;
 MOD : '%' ;
+POW : '^' ;
 
 /**************** Definicions bàsiques ****************/
 DIGIT   : '0'..'9' ;
 ID  : [a-zA-Z] ;
 NUM  : (DIGIT)+ ;
 WS      : [ \t\n]+ -> skip ;
+
+
+/******DUDAS*****/
+
+/*
+    1. Como solucionamos recursividad por la izquierda en expr y otras?
+    2. OR y AND tienen que tener la misma prioridad?
+    3. 
+*/

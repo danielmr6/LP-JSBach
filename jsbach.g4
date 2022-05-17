@@ -13,29 +13,34 @@ stmt
     | writeStmt 
     ;
 
+/****************PROCEDIMENTS****************/
 declFunc : ID+ L_LMT(stmt*)R_LMT ; //Primer tenim l'ID inicial que representa el nom de la funció, després 0 o més ID (paràmetres).
 
 callFunc :  ID (ID* | expr )+ ;
- 
+
+/****************LECTURA****************/
 readStmt : READ ID ;
 
+/****************ESCRIPTURA****************/
 writeStmt : WRITE (ID | expr)+ ; 
 
+/****************CONDICIONAL****************/
 sentenceIf : IF boolExp L_LMT stmt* R_LMT (ELSE L_LMT stmt* R_LMT)? ;
 
+/*****************ASSIGNACIÓ****************/
 assigs : <assoc=right> ID ASSIG expr ;
 
-
+/****************ITERACIONS****************/
 sentenceWhile : WHILE boolExp  L_LMT stmt* R_LMT ;
 
-/****************Definicions de llistes****************/
+/****************LLISTES****************/
 listAddStmt: ID LIST_ADD ID ;
 
 listCutStmt: LIST_CUT ID L_KEY (ID|NUM) R_KEY ;
 
 listSizeStmt: LIST_SIZE ID ;
 
-/**************** Operadors relacionals ****************/
+/****************EXPRESSIONS****************/
 
 boolExp 
     : boolExp OR boolTerm 
@@ -69,6 +74,9 @@ expr
     | (ID | NUM)
     ;
 
+/****************Especificació de JSBach****************/
+
+/*Operadors relacionals*/
 //Retornen 0 com a valor fals i 1 com a valor cert
 EQ : '='; 
 DIF : '/='; 
@@ -77,7 +85,7 @@ GRT : '>' ;
 GREQ : '>=' ;
 LSEQ :  '<=';
 
-/****************Especificació de JSBach****************/
+/*Condicionals i iteracions*/
 IF : 'if' ;
 WHILE : 'while' ;
 ELSE : 'else' ;
@@ -85,20 +93,33 @@ NOT : 'not' ;
 OR : 'or' ;
 AND : 'and' ;
 
+/*Assignació*/
 ASSIG : '<-' ;
+
+/*Lectura*/
 READ : '<?>' ;
+
+/*Escriptura*/ 
 WRITE : '!' ;
-PLAY : '<:>' ;
-NOTE : ('A' .. 'G' | '0' .. '8') ; //mirar notación inglesa
+
+/*Limitadors*/ 
 L_LMT : '|:' ;
 R_LMT : ':|' ;
 
+/*Notes*/
+PLAY : '<:>' ;
+NOTE : ('A' .. 'G' | '0' .. '8') ; 
+
+
+/*Operadors amb llistes*/
 LIST_ADD : '<<' ;
 LIST_CUT : '8<' ;
 LIST_SIZE : '#' ;
 L_KEY : '[' ;
 R_KEY : ']' ;
 COM : '~~~' ;
+
+
 /*
 Falta: 
     -Reproduccio

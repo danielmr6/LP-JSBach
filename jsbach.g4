@@ -17,7 +17,6 @@ declFunc : ID+ L_LMT(stmt*)R_LMT ; //Primer tenim l'ID inicial que representa el
 
 callFunc :  ID (ID* | expr )+ ;
  
-
 readStmt : READ ID ;
 
 writeStmt : WRITE (ID | expr)+ ; 
@@ -30,13 +29,9 @@ assigs : <assoc=right> ID ASSIG expr ;
 
 sentenceWhile : WHILE boolExp  L_LMT stmt* R_LMT ;
 
-expr 
-    : L_LMT expr R_LMT
-    | <assoc=right> expr POW expr 
-    | expr (DIV | MUL | MOD) expr 
-    | expr (ADD | SUB) expr  
-    | (ID | NUM)
-    ;
+/****************Definicions de llistes****************/
+
+
 
 /**************** Operadors relacionals ****************/
 
@@ -64,6 +59,14 @@ relExp
     | expr
     ;
 
+expr 
+    : L_LMT expr R_LMT
+    | <assoc=right> expr POW expr 
+    | expr (DIV | MUL | MOD) expr 
+    | expr (ADD | SUB) expr  
+    | (ID | NUM)
+    ;
+
 //Retornen 0 com a valor fals i 1 com a valor cert
 EQ : '='; 
 DIF : '/='; 
@@ -84,11 +87,15 @@ ASSIG : '<-' ;
 READ : '<?>' ;
 WRITE : '!' ;
 PLAY : '<:>' ;
-
 NOTE : ('A' .. 'G' | '0' .. '8') ; //mirar notación inglesa
 L_LMT : '|:' ;
 R_LMT : ':|' ;
 
+LIST_ADD : '<<' ;
+LIST_CUT : '8<' ;
+LIST_SIZE : '#' ;
+L_KEY : '[' ;
+R_KEY : ']' ;
 COM : '~~~' ;
 /*
 Falta: 

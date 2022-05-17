@@ -23,15 +23,17 @@ writeStmt : WRITE (ID | expr)+ ;
 
 sentenceIf : IF boolExp L_LMT stmt* R_LMT (ELSE L_LMT stmt* R_LMT)? ;
 
-
 assigs : <assoc=right> ID ASSIG expr ;
 
 
 sentenceWhile : WHILE boolExp  L_LMT stmt* R_LMT ;
 
 /****************Definicions de llistes****************/
+listAddStmt: ID LIST_ADD ID ;
 
+listCutStmt: LIST_CUT ID L_KEY (ID|NUM) R_KEY ;
 
+listSizeStmt: LIST_SIZE ID ;
 
 /**************** Operadors relacionals ****************/
 
@@ -99,11 +101,10 @@ R_KEY : ']' ;
 COM : '~~~' ;
 /*
 Falta: 
-    -Invocació de procediments
-    -Gramatica de llistes i notes: Afegit(<<) i tall de llistes (8<)
-    -Lectura
-    -Escriptura
     -Reproduccio
+    - Play
+    - notas y conjunto
+    - listas
     -Ambit de visibilitat
 */
 
@@ -126,6 +127,6 @@ WS      : [ \t\n]+ -> skip ;
 
 /*
     1. Como solucionamos recursividad por la izquierda en expr y otras?
-    2. OR y AND tienen que tener la misma prioridad?
-    3. 
+    2. OR, AND, NOT no se tienen que añadir en la gramática no?
+    3. Definicion de listas: preguntar y consulta?
 */

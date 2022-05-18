@@ -210,12 +210,6 @@ class jsbachParser ( Parser ):
         def getRuleIndex(self):
             return jsbachParser.RULE_root
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitRoot" ):
-                return visitor.visitRoot(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -298,12 +292,6 @@ class jsbachParser ( Parser ):
 
         def getRuleIndex(self):
             return jsbachParser.RULE_stmt
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitStmt" ):
-                return visitor.visitStmt(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -412,12 +400,6 @@ class jsbachParser ( Parser ):
         def getRuleIndex(self):
             return jsbachParser.RULE_comment
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitComment" ):
-                return visitor.visitComment(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -478,12 +460,6 @@ class jsbachParser ( Parser ):
 
         def getRuleIndex(self):
             return jsbachParser.RULE_declFunc
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitDeclFunc" ):
-                return visitor.visitDeclFunc(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -552,12 +528,6 @@ class jsbachParser ( Parser ):
         def getRuleIndex(self):
             return jsbachParser.RULE_callFunc
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitCallFunc" ):
-                return visitor.visitCallFunc(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -615,12 +585,6 @@ class jsbachParser ( Parser ):
         def getRuleIndex(self):
             return jsbachParser.RULE_readStmt
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitReadStmt" ):
-                return visitor.visitReadStmt(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -666,12 +630,6 @@ class jsbachParser ( Parser ):
 
         def getRuleIndex(self):
             return jsbachParser.RULE_writeStmt
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitWriteStmt" ):
-                return visitor.visitWriteStmt(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -756,12 +714,6 @@ class jsbachParser ( Parser ):
         def getRuleIndex(self):
             return jsbachParser.RULE_sentenceIf
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitSentenceIf" ):
-                return visitor.visitSentenceIf(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -839,12 +791,6 @@ class jsbachParser ( Parser ):
         def getRuleIndex(self):
             return jsbachParser.RULE_assigs
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitAssigs" ):
-                return visitor.visitAssigs(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -896,12 +842,6 @@ class jsbachParser ( Parser ):
 
         def getRuleIndex(self):
             return jsbachParser.RULE_sentenceWhile
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitSentenceWhile" ):
-                return visitor.visitSentenceWhile(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -967,12 +907,6 @@ class jsbachParser ( Parser ):
 
         def getRuleIndex(self):
             return jsbachParser.RULE_listStmt
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitListStmt" ):
-                return visitor.visitListStmt(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -1040,12 +974,6 @@ class jsbachParser ( Parser ):
         def getRuleIndex(self):
             return jsbachParser.RULE_listConst
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitListConst" ):
-                return visitor.visitListConst(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -1097,12 +1025,6 @@ class jsbachParser ( Parser ):
         def getRuleIndex(self):
             return jsbachParser.RULE_listDecl
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitListDecl" ):
-                return visitor.visitListDecl(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -1144,12 +1066,6 @@ class jsbachParser ( Parser ):
 
         def getRuleIndex(self):
             return jsbachParser.RULE_listAddStmt
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitListAddStmt" ):
-                return visitor.visitListAddStmt(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -1200,12 +1116,6 @@ class jsbachParser ( Parser ):
         def getRuleIndex(self):
             return jsbachParser.RULE_listCutStmt
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitListCutStmt" ):
-                return visitor.visitListCutStmt(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -1249,12 +1159,6 @@ class jsbachParser ( Parser ):
         def getRuleIndex(self):
             return jsbachParser.RULE_listSizeStmt
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitListSizeStmt" ):
-                return visitor.visitListSizeStmt(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -1297,12 +1201,6 @@ class jsbachParser ( Parser ):
 
         def getRuleIndex(self):
             return jsbachParser.RULE_listGet
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitListGet" ):
-                return visitor.visitListGet(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -1351,12 +1249,6 @@ class jsbachParser ( Parser ):
 
         def getRuleIndex(self):
             return jsbachParser.RULE_playStmt
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitPlayStmt" ):
-                return visitor.visitPlayStmt(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -1443,12 +1335,6 @@ class jsbachParser ( Parser ):
 
         def getRuleIndex(self):
             return jsbachParser.RULE_relExp
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitRelExp" ):
-                return visitor.visitRelExp(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -1537,12 +1423,6 @@ class jsbachParser ( Parser ):
 
         def getRuleIndex(self):
             return jsbachParser.RULE_expr
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitExpr" ):
-                return visitor.visitExpr(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 

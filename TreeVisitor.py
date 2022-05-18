@@ -1,6 +1,6 @@
 if __name__ is not None and "." in __name__:
     from .jsbachParser import jsbachParser
-    from .jsbachVisitor import ExprVisitor
+    from .jsbachVisitor import jsbachVisitor
 else:
     from jsbachParser import jsbachParser
     from jsbachVisitor import jsbachVisitor
@@ -19,6 +19,7 @@ class TreeVisitor(jsbachVisitor):
         pass
     
     def visitReadStmt(self, ctx):  
+        
         pass
     
     def visitWriteStmt(self, ctx):
@@ -29,7 +30,9 @@ class TreeVisitor(jsbachVisitor):
     
     def visitSentenceAssigs(self, ctx):
         l = list(ctx.getChildren())
-        self.ts[l[0]] = l[2]
+        key = l[0].getText()
+        value  = int(l[2].getText())
+        self.ts[key] = value
             
     
     
@@ -70,6 +73,7 @@ class TreeVisitor(jsbachVisitor):
                 self.visit(l[0])
                 self.visit(l[2])
                 self.nivell -= 1
+                return int(l[0].getText) * int(l[2].getText())
                 
             elif l[1].getSymbol().type == jsbachParser.DIV:
                 print('  ' *  self.nivell + 'DIV(/)')
@@ -77,6 +81,7 @@ class TreeVisitor(jsbachVisitor):
                 self.visit(l[0])
                 self.visit(l[2])
                 self.nivell -= 1
+                return int(l[0].getText) / int(l[2].getText())
                 
             elif l[1].getSymbol().type == jsbachParser.MOD:
                 print('  ' *  self.nivell + 'MOD(%)')
@@ -84,6 +89,7 @@ class TreeVisitor(jsbachVisitor):
                 self.visit(l[0])
                 self.visit(l[2])
                 self.nivell -= 1
+                return int(l[0].getText) % int(l[2].getText())
                 
             elif l[1].getSymbol().type == jsbachParser.SUB:
                 print('  ' *  self.nivell + 'SUB(-)')
@@ -91,6 +97,7 @@ class TreeVisitor(jsbachVisitor):
                 self.visit(l[0])
                 self.visit(l[2])
                 self.nivell -= 1
+                return int(l[0].getText) - int(l[2].getText())
                     
             elif l[1].getSymbol().type == jsbachParser.ADD:
                 print('  ' *  self.nivell + 'ADD(+)')
@@ -98,5 +105,6 @@ class TreeVisitor(jsbachVisitor):
                 self.visit(l[0])
                 self.visit(l[2])
                 self.nivell -= 1
+                return int(l[0].getText) + int(l[2].getText())
            
            

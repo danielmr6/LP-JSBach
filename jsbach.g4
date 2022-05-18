@@ -147,7 +147,7 @@ DIV : '/' ;
 MOD : '%' ;
 
 /****************Definició de skip****************/
-WS      : [ \t\n]+ -> skip ;
+WS      : [ \t\r\n]+ -> skip ;
 
 
 /******DUDAS*****/

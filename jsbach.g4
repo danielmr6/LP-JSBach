@@ -4,7 +4,8 @@ root : stmt* EOF ;
 
 
 stmt 
-    : declFunc
+    : comment
+    | declFunc
     | callFunc
     | assigs 
     | sentenceIf
@@ -12,9 +13,15 @@ stmt
     | listStmt
     | playStmt
     | readStmt
-    | writeStmt 
+    | writeStmt
     | expr
     ;
+
+
+/****************COMENTARIS****************/
+comment : COM (ID*) COM ;
+
+
 
 /****************PROCEDIMENTS****************/
 declFunc : ID+ L_LMT(stmt*)R_LMT ; //Primer tenim l'ID inicial que representa el nom de la funció, després 0 o més ID (paràmetres).
@@ -67,7 +74,7 @@ listGet : ID L_KEY (expr) R_KEY ;
 /****************NOTES****************/
 playStmt
     : PLAY '{' (expr+) '}' 
-    | PLAY (NOTE | ID) 
+    | PLAY ID
     ;
 
 
@@ -84,6 +91,7 @@ expr
     | expr (ADD | SUB) expr  
     | (ID | NUM | NOTE)
     ;
+
 
 /****************Especificació de JSBach****************/
 

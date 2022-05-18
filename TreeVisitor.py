@@ -9,47 +9,53 @@ class TreeVisitor(jsbachVisitor):
         self.nivell = 0
         self.ts = {}
         
+    def visitComment(self, ctx):
+        pass
+        
     def visitDeclFunc(self, ctx):
-        return
+        pass
     
     def visitCallFunc(self, ctx):
-        return
+        pass
     
     def visitReadStmt(self, ctx):  
-        return
+        pass
     
     def visitWriteStmt(self, ctx):
-        return
+        pass
     
     def visitSentenceIf(self, ctx):
-        return 
+        pass 
     
     def visitSentenceAssigs(self, ctx):
-        return 
+        l = list(ctx.getChildren())
+        self.ts[l[0]] = l[2]
+            
+    
     
     def visitSentenceWhile(self, ctx):
-        return 
+        pass 
     
     def visitListStmt(self, ctx):
-        return 
+        pass 
     
     def visitListConst(self, ctx):
-        return 
+        pass 
     
     def visitListDecl(self, ctx):
-        return 
+        pass 
     
     def visitListSizeStmt(self, ctx):
-        return 
+        pass 
     
     def visitListGet(self, ctx):
-        return
+        pass
     
     def visitPlayStmt(self, ctx):
-        return 
+        pass 
     
     def visitRelExp(self, ctx):
-        return 
+        pass 
 
     def visitExpr(self, ctx):
         l = list(ctx.getChildren())

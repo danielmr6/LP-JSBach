@@ -19,6 +19,11 @@ class jsbachVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by jsbachParser#comment.
+    def visitComment(self, ctx:jsbachParser.CommentContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by jsbachParser#declFunc.
     def visitDeclFunc(self, ctx:jsbachParser.DeclFuncContext):
         return self.visitChildren(ctx)

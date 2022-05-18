@@ -9,6 +9,8 @@ stmt
     | assigs 
     | sentenceIf
     | sentenceWhile
+    | listStmt
+    | playStmt
     | readStmt
     | writeStmt 
     ;
@@ -18,48 +20,57 @@ declFunc : ID+ L_LMT(stmt*)R_LMT ; //Primer tenim l'ID inicial que representa el
 
 callFunc :  ID (ID* | expr )+ ;
 
+
 /****************LECTURA****************/
 readStmt : READ ID ;
+
 
 /****************ESCRIPTURA****************/
 writeStmt : WRITE (ID | expr)+ ; 
 
+
 /****************CONDICIONAL****************/
-sentenceIf : IF boolExp L_LMT stmt* R_LMT (ELSE L_LMT stmt* R_LMT)? ;
+sentenceIf : IF relExp L_LMT stmt* R_LMT (ELSE L_LMT stmt* R_LMT)? ;
+
 
 /*****************ASSIGNACIÓ****************/
 assigs : <assoc=right> ID ASSIG expr ;
 
+
 /****************ITERACIONS****************/
-sentenceWhile : WHILE boolExp  L_LMT stmt* R_LMT ;
+sentenceWhile : WHILE relExp  L_LMT stmt* R_LMT ;
+
 
 /****************LLISTES****************/
-listAddStmt: ID LIST_ADD ID ;
+listStmt
+    : listAddStmt 
+    | listCutStmt 
+    | listDecl
+    | listGet
+    | listSizeStmt
+    ;
 
-listCutStmt: LIST_CUT ID L_KEY (ID|NUM) R_KEY ;
+listConst : '{' (expr)* '}' ;
+
+listDecl : ID ASSIG listConst ;
+
+listAddStmt: ID LIST_ADD (expr) ;
+
+listCutStmt: LIST_CUT ID L_KEY (expr) R_KEY ;
 
 listSizeStmt: LIST_SIZE ID ;
 
+listGet : ID L_KEY (expr) R_KEY ; 
+
+
+/****************NOTES****************/
+playStmt
+    : PLAY '{' (expr+) '}' 
+    | PLAY (NOTE | ID) 
+    ;
+
+
 /****************EXPRESSIONS****************/
-
-boolExp 
-    : boolExp OR boolTerm 
-    | boolTerm
-    ;
-
-
-boolTerm 
-    : boolTerm AND boolFactor 
-    | boolFactor
-    ;
-
-
-boolFactor 
-    : NOT boolFactor 
-    | ( boolExp ) 
-    | relExp
-    ;
-
 
 relExp 
     : expr (EQ | DIF | LST | GRT | GREQ | LSEQ) expr 
@@ -71,7 +82,7 @@ expr
     | <assoc=right> expr POW expr 
     | expr (DIV | MUL | MOD) expr 
     | expr (ADD | SUB) expr  
-    | (ID | NUM)
+    | (ID | NUM | NOTE)
     ;
 
 /****************Especificació de JSBach****************/
@@ -89,9 +100,6 @@ LSEQ :  '<=';
 IF : 'if' ;
 WHILE : 'while' ;
 ELSE : 'else' ;
-NOT : 'not' ;
-OR : 'or' ;
-AND : 'and' ;
 
 /*Assignació*/
 ASSIG : '<-' ;
@@ -110,7 +118,6 @@ R_LMT : ':|' ;
 PLAY : '<:>' ;
 NOTE : ('A' .. 'G' | '0' .. '8') ; 
 
-
 /*Operadors amb llistes*/
 LIST_ADD : '<<' ;
 LIST_CUT : '8<' ;
@@ -122,10 +129,6 @@ COM : '~~~' ;
 
 /*
 Falta: 
-    -Reproduccio
-    - Play
-    - notas y conjunto
-    - listas
     -Ambit de visibilitat
 */
 
@@ -148,6 +151,4 @@ WS      : [ \t\n]+ -> skip ;
 
 /*
     1. Como solucionamos recursividad por la izquierda en expr y otras?
-    2. OR, AND, NOT no se tienen que añadir en la gramática no?
-    3. Definicion de listas: preguntar y consulta?
 */

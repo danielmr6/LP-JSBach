@@ -13,12 +13,13 @@ stmt
     | playStmt
     | readStmt
     | writeStmt 
+    | expr
     ;
 
 /****************PROCEDIMENTS****************/
 declFunc : ID+ L_LMT(stmt*)R_LMT ; //Primer tenim l'ID inicial que representa el nom de la funció, després 0 o més ID (paràmetres).
 
-callFunc :  ID (ID* | expr )+ ;
+callFunc : ID (ID | expr )* ;
 
 
 /****************LECTURA****************/
@@ -79,7 +80,6 @@ relExp
 
 expr 
     : L_LMT expr R_LMT
-    | <assoc=right> expr POW expr 
     | expr (DIV | MUL | MOD) expr 
     | expr (ADD | SUB) expr  
     | (ID | NUM | NOTE)
@@ -114,6 +114,11 @@ WRITE : '!' ;
 L_LMT : '|:' ;
 R_LMT : ':|' ;
 
+/*Definicions bàsiques*/
+NUM  : (DIGIT)+ ;
+DIGIT   : '0'..'9' ;
+ID  : [a-zA-Z] ;
+
 /*Notes*/
 PLAY : '<:>' ;
 NOTE : ('A' .. 'G' | '0' .. '8') ; 
@@ -126,24 +131,14 @@ L_KEY : '[' ;
 R_KEY : ']' ;
 COM : '~~~' ;
 
-
-/*
-Falta: 
-    -Ambit de visibilitat
-*/
-
 /**************** Operadors aritmètics ****************/
 ADD : '+' ;
 SUB : '-' ;
 MUL : '*' ;
 DIV : '/' ;
 MOD : '%' ;
-POW : '^' ;
 
-/**************** Definicions bàsiques ****************/
-DIGIT   : '0'..'9' ;
-ID  : [a-zA-Z] ;
-NUM  : (DIGIT)+ ;
+/****************Definició de skip****************/
 WS      : [ \t\n]+ -> skip ;
 
 

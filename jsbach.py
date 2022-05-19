@@ -66,7 +66,23 @@ class MyVisitor(jsbachVisitor):
         pass 
     
     def visitRelExp(self, ctx):
-        pass 
+        l = list(ctx.getChildren())
+        opL = l[0].getText()
+        opR = l[2].getText()
+        if l[1].getSymbol().type == jsbachParser.EQ:
+            return opL == opR
+        elif l[1].getSymbol().type == jsbachParser.DIF:
+            return opL != opR
+        elif l[1].getSymbol().type == jsbachParser.LST:
+            return opL < opR
+        elif l[1].getSymbol().type == jsbachParser.GRT:
+            return opL > opR
+        elif l[1].getSymbol().type == jsbachParser.GREQ:
+            return opL <= opR    
+        elif l[1].getSymbol().type == jsbachParser.DIF:
+            return opL >= opR
+        else:
+            print("Exception: Invalid relational operator!")
 
     def visitExpr(self, ctx):
         l = list(ctx.getChildren())

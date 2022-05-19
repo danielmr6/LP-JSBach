@@ -1,5 +1,5 @@
 from antlr4 import *
-from TreeVisitor import TreeVisitor
+from jsbach import MyVisitor
 from jsbachLexer import jsbachLexer
 from jsbachParser import jsbachParser
 input_stream = InputStream(input('? '))
@@ -10,5 +10,5 @@ parser = jsbachParser(token_stream)
 tree = parser.root()
 print(tree.toStringTree(recog=parser))
 
-visitor = TreeVisitor()
+visitor = MyVisitor()
 visitor.visit(tree)

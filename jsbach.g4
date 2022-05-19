@@ -34,7 +34,7 @@ readStmt : READ ID ;
 
 
 /****************ESCRIPTURA****************/
-writeStmt : WRITE (ID | expr)+ ; 
+writeStmt : WRITE (ID+ | expr | text)* ; 
 
 
 /****************CONDICIONAL****************/
@@ -85,6 +85,8 @@ relExp
     | expr
     ;
 
+text : '"' ID* '"';
+
 expr 
     : L_LMT expr R_LMT
     | expr (DIV | MUL | MOD) expr 
@@ -94,6 +96,15 @@ expr
 
 
 /****************Especificació de JSBach****************/
+
+/*Assignació*/
+ASSIG : '<-' ;
+
+/*Lectura*/
+READ : '<?>' ;
+
+/*Escriptura*/ 
+WRITE : '<!>' ;
 
 /*Operadors relacionals*/
 //Retornen 0 com a valor fals i 1 com a valor cert
@@ -109,14 +120,6 @@ IF : 'if' ;
 WHILE : 'while' ;
 ELSE : 'else' ;
 
-/*Assignació*/
-ASSIG : '<-' ;
-
-/*Lectura*/
-READ : '<?>' ;
-
-/*Escriptura*/ 
-WRITE : '!' ;
 
 /*Limitadors*/ 
 L_LMT : '|:' ;

@@ -4,7 +4,7 @@ if __name__ is not None and "." in __name__:
 else:
     from jsbachParser import jsbachParser
     from jsbachVisitor import jsbachVisitor
-class TreeVisitor(jsbachVisitor):
+class MyVisitor(jsbachVisitor):
     def __init__(self):
         self.nivell = 0
         self.ts = {}
@@ -19,7 +19,6 @@ class TreeVisitor(jsbachVisitor):
         pass
     
     def visitReadStmt(self, ctx):  
-        
         pass
     
     def visitWriteStmt(self, ctx):

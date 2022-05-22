@@ -10,10 +10,12 @@ else:
     from jsbachParser import jsbachParser
     from jsbachVisitor import jsbachVisitor
     
-class MyVisitor(jsbachVisitor):
-    def __init__(self):
-        self.nivell = 0
-        self.ts = {}
+class EvalVisitor(jsbachVisitor):
+    def visitRoot(self, ctx):
+        l = list(ctx.getChildren()) 
+        print(self.visit(l[0]))
+       # self.nivell = 0
+       # self.ts = {}
         
     def visitComment(self, ctx):
         pass
@@ -67,20 +69,20 @@ class MyVisitor(jsbachVisitor):
     
     def visitRelExp(self, ctx):
         l = list(ctx.getChildren())
-        opL = l[0].getText()
-        opR = l[2].getText()
+        opL = self.visit(l[0])
+        opR = self.visit(l[2])
         if l[1].getSymbol().type == jsbachParser.EQ:
-            return opL == opR
+            return (opL == opR)
         elif l[1].getSymbol().type == jsbachParser.DIF:
-            return opL != opR
+            return (opL != opR)
         elif l[1].getSymbol().type == jsbachParser.LST:
-            return opL < opR
+            return (opL < opR)
         elif l[1].getSymbol().type == jsbachParser.GRT:
-            return opL > opR
+            return (opL > opR)
         elif l[1].getSymbol().type == jsbachParser.GREQ:
-            return opL <= opR    
+            return (opL <= opR)   
         elif l[1].getSymbol().type == jsbachParser.DIF:
-            return opL >= opR
+            return (opL >= opR)
         else:
             print("Exception: Invalid relational operator!")
 
@@ -88,26 +90,27 @@ class MyVisitor(jsbachVisitor):
         l = list(ctx.getChildren())
         if len(l) == 1:
             return int(l[0].getText())
-        else:  # len(l) == 3
+        else: 
             if l[1].getSymbol().type == jsbachParser.MUL: 
-                return (int(l[0].getText()) * int(l[2].getText()))
+                return self.visit(l[0]) * self.visit(l[2])
                 
             elif l[1].getSymbol().type == jsbachParser.DIV:
                 try: 
-                    return (int(l[0].getText()) / int(l[2].getText()))
+                    return self.visit(l[0]) / self.visit(l[2])
+                
                 except ZeroDivisionError:
                     print("Exception: Division by zero!")
                     
             elif l[1].getSymbol().type == jsbachParser.MOD:
-                return (int(l[0].getText()) % int(l[2].getText()))
+                return self.visit(l[0]) % self.visit(l[2])
                 
             elif l[1].getSymbol().type == jsbachParser.SUB:
-                return (int(l[0].getText()) - int(l[2].getText()))
+                return self.visit(l[0]) - self.visit(l[2])
                     
             elif l[1].getSymbol().type == jsbachParser.ADD:
-                return (int(l[0].getText()) + int(l[2].getText()))
+                return self.visit(l[0]) + self.visit(l[2])
             else:
-                return (l[2].getText())
+                return self.visit(l[2])
            
 
 
@@ -124,7 +127,7 @@ def main():
     tree = parser.root()
     print(tree.toStringTree(recog=parser))
     
-    visitor = MyVisitor()
+    visitor = EvalVisitor()
     visitor.visit(tree)
 
 

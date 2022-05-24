@@ -4,7 +4,7 @@ Aquesta pàgina descriu la pràctica de GEI-LP (edició 2021-2022 Q2). La nostra
 
 Cal aclarir que diem que és un *doble* intèrpret perquè funciona en el sentit informàtic (interpreta un programa) i en el sentit musical (interpreta una peça de música).
 
-## Procés 
+## Tecnologies utilitzades 
 Tal i com s'explicava a l'enunciat:
 
 - Per realitzar la pràctica he utilitzat Python3 i ANTLR4.
@@ -18,7 +18,7 @@ Amb l'objectiu de poder dur a terme la implementació de la gramàtica i l'intè
 pip install antlr4-python3-runtime==4.7.1
 ```
 
-## Introducció al llenguatge: JSBach
+# Introducció al llenguatge: JSBach
 
 JSBach és un llenguatge de programació orientat a la composició algorísmica. Amb JSBach s'utilitzen construccions imperatives per generar composicions que donen lloc a partitures que poden ser desades en diferents formats digitals.
 

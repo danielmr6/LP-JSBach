@@ -14,6 +14,10 @@ class EvalVisitor(jsbachVisitor):
     def __init__(self):
         self.nivell = 0
         self.ts = {}
+        self.noms = {}
+        self.parametres = {}
+        self.context = {}
+        self.pila = [self.noms, self.parametres, self.context]
         
     def visitRoot(self, ctx):
         l = list(ctx.getChildren()) 

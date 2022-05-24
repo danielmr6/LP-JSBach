@@ -69,8 +69,8 @@ class jsbachVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by jsbachParser#listDecl.
-    def visitListDecl(self, ctx:jsbachParser.ListDeclContext):
+    # Visit a parse tree produced by jsbachParser#listDeclStmt.
+    def visitListDeclStmt(self, ctx:jsbachParser.ListDeclStmtContext):
         return self.visitChildren(ctx)
 
 
@@ -84,8 +84,8 @@ class jsbachVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by jsbachParser#listSizeStmt.
-    def visitListSizeStmt(self, ctx:jsbachParser.ListSizeStmtContext):
+    # Visit a parse tree produced by jsbachParser#listSize.
+    def visitListSize(self, ctx:jsbachParser.ListSizeContext):
         return self.visitChildren(ctx)
 
 
@@ -101,11 +101,6 @@ class jsbachVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by jsbachParser#relExp.
     def visitRelExp(self, ctx:jsbachParser.RelExpContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by jsbachParser#text.
-    def visitText(self, ctx:jsbachParser.TextContext):
         return self.visitChildren(ctx)
 
 

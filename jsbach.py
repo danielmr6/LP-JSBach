@@ -1,4 +1,5 @@
 import sys
+from this import d
 from antlr4 import *
 from jsbachLexer import jsbachLexer
 from jsbachParser import jsbachParser
@@ -11,12 +12,14 @@ else:
     from jsbachVisitor import jsbachVisitor
     
 class EvalVisitor(jsbachVisitor):
+    def __init__(self):
+        self.nivell = 0
+        self.ts = {}
+        
     def visitRoot(self, ctx):
         l = list(ctx.getChildren()) 
         print(self.visit(l[0]))
-       # self.nivell = 0
-       # self.ts = {}
-        
+   
     def visitComment(self, ctx):
         pass
         
@@ -30,11 +33,22 @@ class EvalVisitor(jsbachVisitor):
         pass
     
     def visitWriteStmt(self, ctx):
-        try:
-            l = list(ctx.getChildren())
-            print(l[1].getText())
-        except Exception:
-            print("Exception: Nothing to write about!")
+        l = list(ctx.getChildren())
+        n = len(l)
+        res = ""
+        esText = False
+        for child in range(1, n):
+            var = l[child]
+            if var.getSymbol().type == jsbachParser.ID and not esText:
+                if var.getText() in self.ts.keys():
+                    res += str(self.ts[var.getText()])
+                else:
+                    print("Exception: No està al diccionari")
+                    
+            elif var.getSymbol().type == jsbachParser.TXT:
+                    res += var.getText()
+                    esText = True
+        return res
             
     def visitSentenceIf(self, ctx):
         pass 
@@ -80,9 +94,9 @@ class EvalVisitor(jsbachVisitor):
         elif l[1].getSymbol().type == jsbachParser.GRT:
             return (opL > opR)
         elif l[1].getSymbol().type == jsbachParser.GREQ:
-            return (opL <= opR)   
-        elif l[1].getSymbol().type == jsbachParser.DIF:
-            return (opL >= opR)
+            return (opL >= opR)   
+        elif l[1].getSymbol().type == jsbachParser.LSEQ:
+            return (opL <= opR)
         else:
             print("Exception: Invalid relational operator!")
 

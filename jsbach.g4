@@ -14,7 +14,7 @@ stmt
     | playStmt
     | readStmt
     | writeStmt
-    | expr
+    | (expr | relExp)
     ;
 
 
@@ -34,7 +34,7 @@ readStmt : READ ID ;
 
 
 /****************ESCRIPTURA****************/
-writeStmt : WRITE (ID+ | expr | text)* ; 
+writeStmt : WRITE (ID+ | expr | TXT ID* TXT)* ; 
 
 
 /****************CONDICIONAL****************/
@@ -53,20 +53,20 @@ sentenceWhile : WHILE relExp  L_LMT stmt* R_LMT ;
 listStmt
     : listAddStmt 
     | listCutStmt 
-    | listDecl
+    | listDeclStmt
     | listGet
-    | listSizeStmt
+    | listSize
     ;
 
 listConst : '{' (expr)* '}' ;
 
-listDecl : ID ASSIG listConst ;
+listDeclStmt : ID ASSIG listConst ;
 
 listAddStmt: ID LIST_ADD (expr) ;
 
 listCutStmt: LIST_CUT ID L_KEY (expr) R_KEY ;
 
-listSizeStmt: LIST_SIZE ID ;
+listSize: LIST_SIZE ID ;
 
 listGet : ID L_KEY (expr) R_KEY ; 
 
@@ -82,15 +82,15 @@ playStmt
 
 relExp 
     : expr (EQ | DIF | LST | GRT | GREQ | LSEQ) expr 
-    | expr
+    | (TRUE | FALSE | expr)
     ;
-
-text : '"' ID* '"';
 
 expr 
     : L_LMT expr R_LMT
+    | LPAR expr RPAR
     | expr (DIV | MUL | MOD) expr 
     | expr (ADD | SUB) expr  
+    | (listSize | listGet)
     | (ID | NUM | NOTE)
     ;
 
@@ -114,6 +114,8 @@ LST : '<' ;
 GRT : '>' ; 
 GREQ : '>=' ;
 LSEQ :  '<=';
+TRUE : '1' ;
+FALSE : '0' ;
 
 /*Condicionals i iteracions*/
 IF : 'if' ;
@@ -121,14 +123,19 @@ WHILE : 'while' ;
 ELSE : 'else' ;
 
 
-/*Limitadors*/ 
-L_LMT : '|:' ;
-R_LMT : ':|' ;
-
 /*Definicions bàsiques*/
 NUM  : (DIGIT)+ ;
 DIGIT   : '0'..'9' ;
 ID  : [a-zA-Z] ;
+
+/*Limitadors*/ 
+L_LMT : '|:' ;
+R_LMT : ':|' ;
+L_KEY : '[' ;
+R_KEY : ']' ;
+LPAR : '(' ;
+RPAR : ')' ;
+TXT : '"' ;
 
 /*Notes*/
 PLAY : '<:>' ;
@@ -138,8 +145,6 @@ NOTE : ('A' .. 'G' | '0' .. '8') ;
 LIST_ADD : '<<' ;
 LIST_CUT : '8<' ;
 LIST_SIZE : '#' ;
-L_KEY : '[' ;
-R_KEY : ']' ;
 COM : '~~~' ;
 
 /**************** Operadors aritmètics ****************/
@@ -153,8 +158,9 @@ MOD : '%' ;
 WS      : [ \t\r\n]+ -> skip ;
 
 
-/******DUDAS*****/
+/******DUBTES*****/
 
 /*
-    1. Como solucionamos recursividad por la izquierda en expr y otras?
+    1. Recursivitat per l'esquerra?
+    2. Write, If, While, visitor de expressió o es fa un altre a part?
 */

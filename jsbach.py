@@ -30,11 +30,10 @@ class EvalVisitor(jsbachVisitor):
     
     def visitReadStmt(self, ctx):  
         l = list(ctx.getChildren())
-        key = l[0].getText()
         info = input()
-        
-        else:
-            return "hola"
+        key = l[0].getText()
+        self.ts[key] = info
+        return self.ts[key]
     
     
     def visitWriteStmt(self, ctx):
@@ -151,9 +150,7 @@ class EvalVisitor(jsbachVisitor):
             else:
                 return self.visit(l[2])
            
-
-
-
+    
 def main():
     if len(sys.argv) > 1:
         input_stream = FileStream(sys.argv[1])

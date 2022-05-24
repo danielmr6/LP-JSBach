@@ -1,5 +1,4 @@
 import sys
-from this import d
 from antlr4 import *
 from jsbachLexer import jsbachLexer
 from jsbachParser import jsbachParser
@@ -67,7 +66,13 @@ class EvalVisitor(jsbachVisitor):
         return self.ts[key]
         
     def visitSentenceWhile(self, ctx):
-        pass 
+        l = list(ctx.getChildren())
+        while (True):
+            condition = bool(self.visitRelExp(l[1]))
+            if not condition:
+                break
+            return self.visit(l[3])
+             
     
     def visitListStmt(self, ctx):
         pass 
@@ -75,10 +80,16 @@ class EvalVisitor(jsbachVisitor):
     def visitListConst(self, ctx):
         pass 
     
-    def visitListDecl(self, ctx):
+    def visitListDeclStmt(self, ctx):
         pass 
     
-    def visitListSizeStmt(self, ctx):
+    def visitListAddStmt(self, ctx):
+        pass
+    
+    def visitListCut(self, ctx): 
+        pass
+    
+    def visitListSize(self, ctx):
         pass 
     
     def visitListGet(self, ctx):

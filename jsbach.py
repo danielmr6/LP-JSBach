@@ -29,12 +29,17 @@ class EvalVisitor(jsbachVisitor):
         pass
     
     def visitReadStmt(self, ctx):  
-        pass
+        l = list(ctx.getChildren())
+        key = l[0].getText()
+        info = input()
+        
+        else:
+            return "hola"
+    
     
     def visitWriteStmt(self, ctx):
         l = list(ctx.getChildren())
         n = len(l)
-        res = ""
         esText = False
         for child in range(1, n):
             var = l[child]

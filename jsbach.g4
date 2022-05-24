@@ -163,4 +163,6 @@ WS      : [ \t\r\n]+ -> skip ;
 /*
     1. Recursivitat per l'esquerra?
     2. Write, If, While, visitor de expressió o es fa un altre a part?
+    3. Write imprimeix ""
+    4. Pila de diccionaris
 */

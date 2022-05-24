@@ -51,14 +51,20 @@ class EvalVisitor(jsbachVisitor):
         return res
             
     def visitSentenceIf(self, ctx):
-        pass 
+        l = list(ctx.getChildren())
+        condition = bool(self.visitRelExp(l[1]))
+        if condition:
+            return self.visit(l[3])        
+        elif len(l) == 9:
+            return self.visit(l[7])
+         
     
     def visitSentenceAssigs(self, ctx):
         l = list(ctx.getChildren())
         key = l[0].getText()
         value  = int(l[2].getText())
         self.ts[key] = value
-        return self.ts
+        return self.ts[key]
         
     def visitSentenceWhile(self, ctx):
         pass 
@@ -83,22 +89,25 @@ class EvalVisitor(jsbachVisitor):
     
     def visitRelExp(self, ctx):
         l = list(ctx.getChildren())
-        opL = self.visit(l[0])
-        opR = self.visit(l[2])
-        if l[1].getSymbol().type == jsbachParser.EQ:
-            return (opL == opR)
-        elif l[1].getSymbol().type == jsbachParser.DIF:
-            return (opL != opR)
-        elif l[1].getSymbol().type == jsbachParser.LST:
-            return (opL < opR)
-        elif l[1].getSymbol().type == jsbachParser.GRT:
-            return (opL > opR)
-        elif l[1].getSymbol().type == jsbachParser.GREQ:
-            return (opL >= opR)   
-        elif l[1].getSymbol().type == jsbachParser.LSEQ:
-            return (opL <= opR)
+        if len(l) == 1:
+            return self.visit(l[0]) != 0
         else:
-            print("Exception: Invalid relational operator!")
+            opL = self.visit(l[0])
+            opR = self.visit(l[2])
+            if l[1].getSymbol().type == jsbachParser.EQ:
+                return (opL == opR)
+            elif l[1].getSymbol().type == jsbachParser.DIF:
+                return (opL != opR)
+            elif l[1].getSymbol().type == jsbachParser.LST:
+                return (opL < opR)
+            elif l[1].getSymbol().type == jsbachParser.GRT:
+                return (opL > opR)
+            elif l[1].getSymbol().type == jsbachParser.GREQ:
+                return (opL >= opR)   
+            elif l[1].getSymbol().type == jsbachParser.LSEQ:
+                return (opL <= opR)
+            else:
+                print("Exception: Invalid relational operator!")
 
     def visitExpr(self, ctx):
         l = list(ctx.getChildren())

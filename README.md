@@ -39,6 +39,27 @@ La primera instrucció del programa `<!> "Hallo Bach"` és una instrucció d'esc
 
 ## Intèrpret
 
+En aquesta secció parlaré dels aspectes més importants  relacionats amb el desenvolupament de l'intèrpret en el fitxer `jsbach.py`. 
+
+Primerament, hi ha definit el mètode `main()` que llegeix l'entrada en funció dels paràmetres que es passen. Si es passa més d'un es llegeix el fitxer com a segon paràmetre i s'interpeta, en cas contrari es llegeix des de la terminal.
+
+En relació amb els visitadors, he afegit un visitador anomenat `EvalVisitor`, el qual hereda del visitor `jsbachVisitor`. Aquest últim s'ha generat després d'executar la següent comanda per terminal:
+
+```bash 
+antlr4 -Dlanguage=Python3 -no-listener -visitor jsbach.g4
+```
+Això permet compilar la gràmatica i generar els fitxers:
+- `jsbachLexer.py` i `jsbachLexer.tokens` 
+- `jsbachParser.py` i `jsbach.tokens`
+ 
+A més de generar la plantilla del visitor mencionat anteriorment: `jsbachVisitor.py`.
+
+Una vegada entrem dins del visitador, tenim la constructora que inicialitza les diferents estructures de dades. (EXPLICAR EN DETALLE CUANDO SE ACABE)
+
+A continuació, tenim el mètode `visitRoot(self,ctx)`. La seva funció principal és visitar tots els fills i guardar totes les dades de les funcions, ja que a l'arrel de la gramàtica tenim amb màxima prioritat les declaracions de funcions (JSBach és procedural). 
+
+Seguidament, es comprova si està definida la funció `Main` al programa en JSBach, si està declarada es visita directament el seu codi i, en cas de que no estigués definida, es llençaria una excepció.
+
 
 ## Invocació de l'intèrpret
 

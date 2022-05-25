@@ -1,6 +1,6 @@
 ~~~ Kleines Program in JSBach ~~~
 
-Main |: 
+Maan |: 
     <!> "Hallo Bach" 
     <:> { A B C }
 :|

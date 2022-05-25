@@ -17,11 +17,6 @@ stmt
     | (expr | relExp)
     ;
 
-
-/****************COMENTARIS****************/
-//comment : COM (ID*) COM conjStmt;
-
-
 /****************LECTURA****************/
 readStmt : READ ID ;
 

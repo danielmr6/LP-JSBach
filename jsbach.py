@@ -16,16 +16,14 @@ class EvalVisitor(jsbachVisitor):
         #No se si seria d'aquesta manera l'emmagatzament de les dades
         self.ts = {}
         self.dadesFunc = {}
+        self.partitura = []
         
-        '''dadesFunc = { "Main" : { "parametres" : {} , "codi" :  } }
+        '''dadesFunc = { "Main" : { "parametres" : [] , "codi" :  } }
         Fem un diccionari tenint com a clau el nom de la funcio i com a valor una tupla amb 
         parametres i el codi de la funcio
         
-        En visitConjStmt recorrer los stmts i visitarlos (visit normal).
-        (En visitStmt tendremos que filtrar que tipo de stmt es y visitarlo.)
-        
          En DeclFunc guardamos la informacion de la funcion en dadesFunc y el callFunc ejecuta.
-         Despues de recorrer todo, miramos si esta el main, si esta llamamos a callfunc y pasamos el valor de codi.
+         Despues de recorrer todo, miramos si esta el main, si esta llamamos  y pasamos el valor de codi.
          Si no está, excepción.
          '''
     def visitRoot(self, ctx):
@@ -35,7 +33,6 @@ class EvalVisitor(jsbachVisitor):
             self.visit(l[i])
         
         if 'Main' in self.dadesFunc.keys():
-            print("tenim main")
             return self.visit(self.dadesFunc['Main']['codi'])
         else:
             raise Exception("No està definit la funció Main()")
@@ -202,7 +199,7 @@ def main():
     if len(sys.argv) > 1:
         input_stream = FileStream(sys.argv[1])
     else:
-        input_stream = InputStream(input('? '))
+        input_stream = InputStream(input('jsbach  '))
         
     lexer = jsbachLexer(input_stream)
     token_stream = CommonTokenStream(lexer)

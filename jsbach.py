@@ -81,10 +81,7 @@ class EvalVisitor(jsbachVisitor):
         for child in range(1, n):
             var = l[child]
             if var.getSymbol().type == jsbachParser.ID:
-                print(self.ts)
                 if var.getText() in self.ts.keys():
-                    print(self.ts[var.getText()])
-                    print("que pasó?")
                     res += ' ' + str(self.ts[var.getText()])
                 else:
                     raise Exception("No està al diccionari")
@@ -102,13 +99,11 @@ class EvalVisitor(jsbachVisitor):
             return self.visit(l[7])
          
     
-    def visitSentenceAssigs(self, ctx):
-        print("entramoss")
+    def visitAssigs(self, ctx):
         l = list(ctx.getChildren())
         key = l[0].getText()
         value  = int(l[2].getText())
         self.ts[key] = value
-        print(self.ts)
         
     def visitSentenceWhile(self, ctx):
         l = list(ctx.getChildren())

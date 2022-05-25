@@ -136,7 +136,15 @@ class EvalVisitor(jsbachVisitor):
         pass
     
     def visitPlayStmt(self, ctx):
-        print("acabem el play")
+        l = list(ctx.getChildren())
+        n = len(l)
+        if l[1].getText() == '{':
+            i = 2
+            while i < n and l[i].getText() != '}': 
+                self.partitura.append(l[i].getText())
+                i += 1
+        # elif l[1].getSymbol().type == jsbachParser.ID: LISTA
+        print(self.partitura)
     
     def visitRelExp(self, ctx):
         l = list(ctx.getChildren())

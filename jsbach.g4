@@ -95,7 +95,6 @@ READ : '<?>' ;
 WRITE : '<!>' ;
 
 /*Operadors relacionals*/
-//Retornen 0 com a valor fals i 1 com a valor cert
 EQ : '='; 
 DIF : '/='; 
 LST : '<' ;
@@ -127,7 +126,7 @@ DIGIT   : '0'..'9' ;
 ID  : [a-zA-Z]+ ;
 /*Notes*/
 PLAY : '<:>' ;
-NOTE : ('A' .. 'G' | '0' .. '8') ; 
+NOTE : ('A' .. 'G') ('0' .. '8')? ; 
 
 /*Operadors amb llistes*/
 LIST_ADD : '<<' ;

@@ -1,48 +1,41 @@
 grammar jsbach;
 
-root : stmt* EOF ;
+root : declFunc+ EOF ;
 
+
+/****************PROCEDIMENTS****************/
+declFunc : ID L_LMT conjStmt R_LMT ;
+
+callFunc : ID (ID | expr )* ;
+
+
+/**************** CONJUNT D'INSTRUCCIONS****************/
+conjStmt : stmt* ;
 
 stmt 
-    : comment
-    | declFunc
-    | callFunc
-    | assigs 
-    | sentenceIf
-    | sentenceWhile
-    | listStmt
-    | playStmt
-    | readStmt
-    | writeStmt
+    : (callFunc | assigs | sentenceIf | sentenceWhile | listStmt | playStmt | readStmt | writeStmt)
     | (expr | relExp)
     ;
 
 
 /****************COMENTARIS****************/
-comment : COM (ID*) COM ;
-
-
-
-/****************PROCEDIMENTS****************/
-declFunc : ID+ L_LMT(stmt*)R_LMT ; //Primer tenim l'ID inicial que representa el nom de la funció, després 0 o més ID (paràmetres).
-
-callFunc : ID (ID | expr )* ;
+//comment : COM (ID*) COM conjStmt;
 
 
 /****************LECTURA****************/
 readStmt : READ ID ;
 
 
+/*****************ASSIGNACIÓ****************/
+assigs : <assoc=right> ID ASSIG expr ;
+
+
 /****************ESCRIPTURA****************/
-writeStmt : WRITE (ID+ | expr | TXT ID* TXT)* ; 
+writeStmt : WRITE (ID | expr | CADENA)* ; 
 
 
 /****************CONDICIONAL****************/
 sentenceIf : IF relExp L_LMT stmt* R_LMT (ELSE L_LMT stmt* R_LMT)? ;
-
-
-/*****************ASSIGNACIÓ****************/
-assigs : <assoc=right> ID ASSIG expr ;
 
 
 /****************ITERACIONS****************/
@@ -91,7 +84,7 @@ expr
     | expr (DIV | MUL | MOD) expr 
     | expr (ADD | SUB) expr  
     | (listSize | listGet)
-    | (ID | NUM | NOTE)
+    | (NOTE | NUM | ID)
     ;
 
 
@@ -117,16 +110,6 @@ LSEQ :  '<=';
 TRUE : '1' ;
 FALSE : '0' ;
 
-/*Condicionals i iteracions*/
-IF : 'if' ;
-WHILE : 'while' ;
-ELSE : 'else' ;
-
-
-/*Definicions bàsiques*/
-NUM  : (DIGIT)+ ;
-DIGIT   : '0'..'9' ;
-ID  : [a-zA-Z] ;
 
 /*Limitadors*/ 
 L_LMT : '|:' ;
@@ -137,6 +120,16 @@ LPAR : '(' ;
 RPAR : ')' ;
 TXT : '"' ;
 
+/*Condicionals i iteracions*/
+IF : 'if' ;
+WHILE : 'while' ;
+ELSE : 'else' ;
+
+
+/*Definicions bàsiques*/
+NUM  : (DIGIT)+ ;
+DIGIT   : '0'..'9' ;
+ID  : [a-zA-Z]+ ;
 /*Notes*/
 PLAY : '<:>' ;
 NOTE : ('A' .. 'G' | '0' .. '8') ; 
@@ -154,15 +147,19 @@ MUL : '*' ;
 DIV : '/' ;
 MOD : '%' ;
 
-/****************Definició de skip****************/
-WS      : [ \t\r\n]+ -> skip ;
+CADENA : '"' (~('"' | '\n' | '\r' | '\t'))*'"';
 
+
+/****************Definició de skip****************/
+WS     : [ \t\r\n]+ -> skip ;
+NL : (('\r\n')) ;
+
+COMMENT : '~~~' (('*' NL) | ('*' ~('\n' | '\r')) | NL | ~( '\n' | '\r' | '*'))* '~~~' -> skip ;
 
 /******DUBTES*****/
 
 /*
     1. Recursivitat per l'esquerra?
     2. Write, If, While, visitor de expressió o es fa un altre a part?
-    3. Write imprimeix ""
     4. Pila de diccionaris
 */

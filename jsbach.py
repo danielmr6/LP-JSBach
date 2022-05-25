@@ -13,22 +13,60 @@ else:
 class EvalVisitor(jsbachVisitor):
     def __init__(self):
         self.nivell = 0
+        #No se si seria d'aquesta manera l'emmagatzament de les dades
         self.ts = {}
-        self.noms = {}
-        self.parametres = {}
-        self.context = {}
-        self.pila = [self.noms, self.parametres, self.context]
+        self.dadesFunc = {}
         
+        '''dadesFunc = { "Main" : { "parametres" : {} , "codi" :  } }
+        Fem un diccionari tenint com a clau el nom de la funcio i com a valor una tupla amb 
+        parametres i el codi de la funcio
+        
+        En visitConjStmt recorrer los stmts i visitarlos (visit normal).
+        (En visitStmt tendremos que filtrar que tipo de stmt es y visitarlo.)
+        
+         En DeclFunc guardamos la informacion de la funcion en dadesFunc y el callFunc ejecuta.
+         Despues de recorrer todo, miramos si esta el main, si esta llamamos a callfunc y pasamos el valor de codi.
+         Si no está, excepción.
+         '''
     def visitRoot(self, ctx):
         l = list(ctx.getChildren()) 
-        print(self.visit(l[0]))
-   
-    def visitComment(self, ctx):
-        pass
+        n = len(l)
+        for i in range(0,n):
+            self.visit(l[i])
         
+        if 'Main' in self.dadesFunc.keys():
+            print("tenim main")
+            return self.visit(self.dadesFunc['Main']['codi'])
+        else:
+            raise Exception("No està definit la funció Main()")
+        
+    #Guardar la informació en els diccionaris
     def visitDeclFunc(self, ctx):
-        pass
+        l = list(ctx.getChildren())
+        n = len(l)
+        print(n)
+        if (len(l) == 4):
+            nomFunc = l[0].getText()
+            posCodi = 2
+            blocCodi = l[posCodi]
+            self.dadesFunc[nomFunc] = {'parametres' : [], 'codi' : blocCodi}
+            print(self.dadesFunc)
+        else:
+            nomFunc = l[0].getText()
+            parametres = []
+            for child in range(1, n):
+                #no hem arribat al limitador esquerrà
+                if not l[child].getSymbol().type == jsbachParser.L_LMT:
+                    parametres.append(l[child].getText())
+                else:
+                    posCodi = child+1
+                    blocCodi = l[posCodi]
+            self.dadesFunc[nomFunc] = {'parametres' : parametres, 'codi' : blocCodi}
+                        
     
+    '''
+    Metode quan es crida a una funció que no es el main
+    '''        
     def visitCallFunc(self, ctx):
         pass
     
@@ -38,24 +76,25 @@ class EvalVisitor(jsbachVisitor):
         key = l[0].getText()
         self.ts[key] = info
         return self.ts[key]
-    
-    
+        
     def visitWriteStmt(self, ctx):
         l = list(ctx.getChildren())
         n = len(l)
-        esText = False
+        res = ""
         for child in range(1, n):
             var = l[child]
-            if var.getSymbol().type == jsbachParser.ID and not esText:
+            if var.getSymbol().type == jsbachParser.ID:
+                print(self.ts)
                 if var.getText() in self.ts.keys():
-                    res += str(self.ts[var.getText()])
+                    print(self.ts[var.getText()])
+                    print("que pasó?")
+                    res += ' ' + str(self.ts[var.getText()])
                 else:
-                    print("Exception: No està al diccionari")
+                    raise Exception("No està al diccionari")
                     
-            elif var.getSymbol().type == jsbachParser.TXT:
-                    res += var.getText()
-                    esText = True
-        return res
+            else: 
+                res += var.getText()
+        print(res)
             
     def visitSentenceIf(self, ctx):
         l = list(ctx.getChildren())
@@ -67,11 +106,12 @@ class EvalVisitor(jsbachVisitor):
          
     
     def visitSentenceAssigs(self, ctx):
+        print("entramoss")
         l = list(ctx.getChildren())
         key = l[0].getText()
         value  = int(l[2].getText())
         self.ts[key] = value
-        return self.ts[key]
+        print(self.ts)
         
     def visitSentenceWhile(self, ctx):
         l = list(ctx.getChildren())
@@ -104,7 +144,7 @@ class EvalVisitor(jsbachVisitor):
         pass
     
     def visitPlayStmt(self, ctx):
-        pass 
+        print("acabem el play")
     
     def visitRelExp(self, ctx):
         l = list(ctx.getChildren())
@@ -131,7 +171,10 @@ class EvalVisitor(jsbachVisitor):
     def visitExpr(self, ctx):
         l = list(ctx.getChildren())
         if len(l) == 1:
-            return int(l[0].getText())
+            if l[0].getSymbol().type == jsbachParser.NUM:
+                return int(l[0].getText())
+            elif l[0].getSymbol().type == jsbachParser.NOTE:
+                return (l[0].getText())
         else: 
             if l[1].getSymbol().type == jsbachParser.MUL: 
                 return self.visit(l[0]) * self.visit(l[2])

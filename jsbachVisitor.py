@@ -14,16 +14,6 @@ class jsbachVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by jsbachParser#stmt.
-    def visitStmt(self, ctx:jsbachParser.StmtContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by jsbachParser#comment.
-    def visitComment(self, ctx:jsbachParser.CommentContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by jsbachParser#declFunc.
     def visitDeclFunc(self, ctx:jsbachParser.DeclFuncContext):
         return self.visitChildren(ctx)
@@ -34,8 +24,23 @@ class jsbachVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by jsbachParser#conjStmt.
+    def visitConjStmt(self, ctx:jsbachParser.ConjStmtContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by jsbachParser#stmt.
+    def visitStmt(self, ctx:jsbachParser.StmtContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by jsbachParser#readStmt.
     def visitReadStmt(self, ctx:jsbachParser.ReadStmtContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by jsbachParser#assigs.
+    def visitAssigs(self, ctx:jsbachParser.AssigsContext):
         return self.visitChildren(ctx)
 
 
@@ -46,11 +51,6 @@ class jsbachVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by jsbachParser#sentenceIf.
     def visitSentenceIf(self, ctx:jsbachParser.SentenceIfContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by jsbachParser#assigs.
-    def visitAssigs(self, ctx:jsbachParser.AssigsContext):
         return self.visitChildren(ctx)
 
 

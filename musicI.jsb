@@ -5,3 +5,7 @@ Main |:
     <!> "Hallo Bach" x
     <:> { A B C }
 :|
+
+Another |:
+	<!> "Comencem per una altra"
+:|

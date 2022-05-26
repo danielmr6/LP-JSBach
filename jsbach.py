@@ -13,7 +13,7 @@ else:
 class EvalVisitor(jsbachVisitor):
     def __init__(self, nomFuncioIni: str, parametres:list):
         self.nivell = 0
-        if nomFuncioIni != None and nomFuncioIni != 'Main' and len(parametres) > 0:
+        if nomFuncioIni != None and nomFuncioIni != 'Main':
             self.nomFuncioInicial = nomFuncioIni
             self.parametres = parametres
         else:
@@ -54,7 +54,8 @@ class EvalVisitor(jsbachVisitor):
             if self.nomFuncioInicial == 'Main':
                 return self.visit(self.dadesFunc['Main']['codi'])
             else:
-                return self.visit(self.dadesFunc[self.nomFuncioInicial]['codi'])
+                self.visit(self.dadesFunc[self.nomFuncioInicial]['codi'])
+                self.visit(self.dadesFunc['Main']['codi'])
         else:
             raise Exception("No està definida la funció Main()")
         
@@ -230,7 +231,7 @@ def main():
                 nomFuncioInit = sys.argv[2]
                 for i in range (3, len(sys.argv)):
                     params.append(sys.argv[i])
-                    visitor = EvalVisitor(nomFuncioInit, params)
+                visitor = EvalVisitor(nomFuncioInit, params)
         else:
             raise Exception("El fitxer no és un programa en JSBach")
     

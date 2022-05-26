@@ -56,7 +56,7 @@ class EvalVisitor(jsbachVisitor):
             else:
                 return self.visit(self.dadesFunc[self.nomFuncioInicial]['codi'])
         else:
-            raise Exception("No està definit la funció Main()")
+            raise Exception("No està definida la funció Main()")
         
     #Guardar la informació en els diccionaris
     def visitDeclFunc(self, ctx):
@@ -186,7 +186,7 @@ class EvalVisitor(jsbachVisitor):
             elif l[1].getSymbol().type == jsbachParser.LSEQ:
                 return (opL <= opR)
             else:
-                print("Exception: Invalid relational operator!")
+                raise Exception("Operador relacional invàlid")
 
     def visitExpr(self, ctx):
         l = list(ctx.getChildren())

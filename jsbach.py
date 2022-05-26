@@ -221,8 +221,8 @@ class EvalVisitor(jsbachVisitor):
 def main():
     
     if len(sys.argv) > 1:
-        input_stream = FileStream(sys.argv[1])
         if sys.argv[1].endswith('.jsb'):
+            input_stream = FileStream(sys.argv[1])
             if len(sys.argv) == 2:
                 visitor = EvalVisitor(None, None)
             elif len(sys.argv) > 2:

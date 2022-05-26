@@ -11,14 +11,31 @@ else:
     from jsbachVisitor import jsbachVisitor
     
 class EvalVisitor(jsbachVisitor):
-    def __init__(self):
+    def __init__(self, nomFuncioIni: str, parametres:list):
         self.nivell = 0
-        #No se si seria d'aquesta manera l'emmagatzament de les dades
+        if nomFuncioIni != None and nomFuncioIni != 'Main' and len(parametres) > 0:
+            self.nomFuncioInicial = nomFuncioIni
+            self.parametres = parametres
+        else:
+            self.nomFuncioInicial = 'Main'
+            self.parametres = []
+        
         self.ts = {}
+        self.pila = []
         self.dadesFunc = {}
         self.partitura = []
         
-        '''dadesFunc = { "Main" : { "parametres" : [] , "codi" :  } }
+        '''dadesFunc = 
+        { 
+        "Main" : { 
+                   "parametres" : [] , 
+                   "codi" : ...,
+                   "taulaSimbols" : 
+                   {
+                    "nomVariable" : valor ...   
+                   }
+                }
+        }
         Fem un diccionari tenint com a clau el nom de la funcio i com a valor una tupla amb 
         parametres i el codi de la funcio
         
@@ -32,8 +49,12 @@ class EvalVisitor(jsbachVisitor):
         for i in range(0,n):
             self.visit(l[i])
         
-        if 'Main' in self.dadesFunc.keys():
-            return self.visit(self.dadesFunc['Main']['codi'])
+        
+        if 'Main' in self.dadesFunc.keys(): 
+            if self.nomFuncioInicial == 'Main':
+                return self.visit(self.dadesFunc['Main']['codi'])
+            else:
+                return self.visit(self.dadesFunc[self.nomFuncioInicial]['codi'])
         else:
             raise Exception("No està definit la funció Main()")
         
@@ -143,7 +164,6 @@ class EvalVisitor(jsbachVisitor):
             while i < n and l[i].getText() != '}': 
                 self.partitura.append(l[i].getText())
                 i += 1
-        # elif l[1].getSymbol().type == jsbachParser.ID: LISTA
         print(self.partitura)
     
     def visitRelExp(self, ctx):
@@ -199,10 +219,24 @@ class EvalVisitor(jsbachVisitor):
            
     
 def main():
+    
     if len(sys.argv) > 1:
         input_stream = FileStream(sys.argv[1])
+        if sys.argv[1].endswith('.jsb'):
+            if len(sys.argv) == 2:
+                visitor = EvalVisitor(None, None)
+            elif len(sys.argv) > 2:
+                params = []
+                nomFuncioInit = sys.argv[2]
+                for i in range (3, len(sys.argv)):
+                    params.append(sys.argv[i])
+                    visitor = EvalVisitor(nomFuncioInit, params)
+        else:
+            raise Exception("El fitxer no és un programa en JSBach")
+    
     else:
         input_stream = InputStream(input('jsbach  '))
+        visitor = EvalVisitor(None, None)
         
     lexer = jsbachLexer(input_stream)
     token_stream = CommonTokenStream(lexer)
@@ -210,7 +244,6 @@ def main():
     tree = parser.root()
     print(tree.toStringTree(recog=parser))
     
-    visitor = EvalVisitor()
     visitor.visit(tree)
 
 

@@ -63,7 +63,6 @@ class EvalVisitor(jsbachVisitor):
     def visitDeclFunc(self, ctx):
         l = list(ctx.getChildren())
         n = len(l)
-        print(n)
         if (len(l) == 4):
             nomFunc = l[0].getText()
             posCodi = 2
@@ -106,7 +105,7 @@ class EvalVisitor(jsbachVisitor):
                 if var.getText() in self.ts.keys():
                     res += ' ' + str(self.ts[var.getText()])
                 else:
-                    raise Exception("No està al diccionari")
+                    raise Exception("El valor a escriure no està al diccionari")
                     
             else: 
                 res += var.getText()
@@ -123,17 +122,24 @@ class EvalVisitor(jsbachVisitor):
     
     def visitAssigs(self, ctx):
         l = list(ctx.getChildren())
+        print("Assignem !!!")
+        for i in l:
+            print(i.getText())
         key = l[0].getText()
-        value  = int(l[2].getText())
+        value  = self.visit(l[2])
         self.ts[key] = value
+        return value
+
         
     def visitSentenceWhile(self, ctx):
         l = list(ctx.getChildren())
+        for i in l:
+            print(i.getText())
         while (True):
             condition = bool(self.visitRelExp(l[1]))
             if not condition:
                 break
-            return self.visit(l[3])
+            self.visit(l[3])
              
     
     def visitListStmt(self, ctx):
@@ -170,54 +176,77 @@ class EvalVisitor(jsbachVisitor):
     def visitRelExp(self, ctx):
         l = list(ctx.getChildren())
         if len(l) == 1:
-            return self.visit(l[0]) != 0
+            numero = int(l[0].getText())
+            if numero > 0:
+                return 1
+            else:
+                return 0
         else:
             opL = self.visit(l[0])
             opR = self.visit(l[2])
-            if l[1].getSymbol().type == jsbachParser.EQ:
-                return (opL == opR)
-            elif l[1].getSymbol().type == jsbachParser.DIF:
-                return (opL != opR)
-            elif l[1].getSymbol().type == jsbachParser.LST:
-                return (opL < opR)
-            elif l[1].getSymbol().type == jsbachParser.GRT:
-                return (opL > opR)
-            elif l[1].getSymbol().type == jsbachParser.GREQ:
-                return (opL >= opR)   
-            elif l[1].getSymbol().type == jsbachParser.LSEQ:
-                return (opL <= opR)
+            tipus = l[1].getSymbol().type
+            if tipus == jsbachParser.EQ:
+                return int(opL == opR)
+            elif tipus == jsbachParser.DIF:
+                return int(opL != opR)
+            elif tipus == jsbachParser.LST:
+                return int(opL < opR)
+            elif tipus == jsbachParser.GRT:
+                return int(opL > opR)
+            elif tipus == jsbachParser.LEQ:
+                return int(opL <= opR)
+            elif tipus == jsbachParser.GEQ:
+                return int(opL >= opR)
             else:
-                raise Exception("Operador relacional invàlid")
-
-    def visitExpr(self, ctx):
+                raise Exception("Operador " + tipus + "no està definit a JSBach")
+            
+    def visitLists(self, ctx):
         l = list(ctx.getChildren())
-        if len(l) == 1:
-            if l[0].getSymbol().type == jsbachParser.NUM:
-                return int(l[0].getText())
-            elif l[0].getSymbol().type == jsbachParser.NOTE:
-                return (l[0].getText())
-        else: 
-            if l[1].getSymbol().type == jsbachParser.MUL: 
-                return self.visit(l[0]) * self.visit(l[2])
-                
-            elif l[1].getSymbol().type == jsbachParser.DIV:
-                try: 
-                    return self.visit(l[0]) / self.visit(l[2])
-                
-                except ZeroDivisionError:
-                    print("Exception: Division by zero!")
+
+    
+    def visitAddSub(self, ctx):
+        l = list(ctx.getChildren())
+        exprL = self.visit(l[0])
+        exprR = self.visit(l[2])
+        if l[1].getSymbol().type == jsbachParser.SUB:
+            return int(exprL) - int(exprR)
                     
-            elif l[1].getSymbol().type == jsbachParser.MOD:
-                return self.visit(l[0]) % self.visit(l[2])
-                
-            elif l[1].getSymbol().type == jsbachParser.SUB:
-                return self.visit(l[0]) - self.visit(l[2])
-                    
-            elif l[1].getSymbol().type == jsbachParser.ADD:
-                return self.visit(l[0]) + self.visit(l[2])
+        elif l[1].getSymbol().type == jsbachParser.ADD:
+            return int(exprL) + int(exprR)
+    
+    def visitParents(self, ctx):
+        l = list(ctx.getChildren())
+        return self.visit(l[1])
+
+    
+    def visitVarId(self, ctx):
+        if ctx.getText() in self.ts.keys():
+                return self.ts[ctx.getText()]
+        else:
+            raise Exception("La variable " +  ctx.getText() + "no està al diccionari")
+    
+    def visitNote(self, ctx: jsbachParser.NoteContext):
+        return ctx.getText()
+    
+    def visitNum(self, ctx: jsbachParser.NumContext):
+        return int(ctx.getText())
+
+    def visitDivMulMod(self, ctx):
+        l = list(ctx.getChildren())
+        exprL = self.visitExpr(l[0])
+        exprR = self.visitExpr(l[2])
+        if l[1].getSymbol().type == jsbachParser.MUL: 
+            return int(exprL * exprR)
+            
+        elif l[1].getSymbol().type == jsbachParser.DIV:
+            if exprR.getText() != '0':
+                return int(exprL/exprR)
             else:
-                return self.visit(l[2])
-           
+                raise Exception("No es pot dividir per zero!")
+                    
+        elif l[1].getSymbol().type == jsbachParser.MOD:
+            return int(exprL % exprR)
+          
     
 def main():
     

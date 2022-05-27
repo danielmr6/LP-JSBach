@@ -34,13 +34,13 @@ class jsbachVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by jsbachParser#readStmt.
-    def visitReadStmt(self, ctx:jsbachParser.ReadStmtContext):
+    # Visit a parse tree produced by jsbachParser#assigs.
+    def visitAssigs(self, ctx:jsbachParser.AssigsContext):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by jsbachParser#assigs.
-    def visitAssigs(self, ctx:jsbachParser.AssigsContext):
+    # Visit a parse tree produced by jsbachParser#readStmt.
+    def visitReadStmt(self, ctx:jsbachParser.ReadStmtContext):
         return self.visitChildren(ctx)
 
 
@@ -104,8 +104,38 @@ class jsbachVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by jsbachParser#expr.
-    def visitExpr(self, ctx:jsbachParser.ExprContext):
+    # Visit a parse tree produced by jsbachParser#Lists.
+    def visitLists(self, ctx:jsbachParser.ListsContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by jsbachParser#AddSub.
+    def visitAddSub(self, ctx:jsbachParser.AddSubContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by jsbachParser#Parents.
+    def visitParents(self, ctx:jsbachParser.ParentsContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by jsbachParser#Note.
+    def visitNote(self, ctx:jsbachParser.NoteContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by jsbachParser#Num.
+    def visitNum(self, ctx:jsbachParser.NumContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by jsbachParser#VarId.
+    def visitVarId(self, ctx:jsbachParser.VarIdContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by jsbachParser#DivMulMod.
+    def visitDivMulMod(self, ctx:jsbachParser.DivMulModContext):
         return self.visitChildren(ctx)
 
 

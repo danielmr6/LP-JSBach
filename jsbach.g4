@@ -17,12 +17,11 @@ stmt
     | (expr | relExp)
     ;
 
+/*****************ASSIGNACIÓ****************/
+assigs : ID ASSIG expr ;
+
 /****************LECTURA****************/
 readStmt : READ ID ;
-
-
-/*****************ASSIGNACIÓ****************/
-assigs : <assoc=right> ID ASSIG expr ;
 
 
 /****************ESCRIPTURA****************/
@@ -30,11 +29,11 @@ writeStmt : WRITE (ID | expr | CADENA)* ;
 
 
 /****************CONDICIONAL****************/
-sentenceIf : IF relExp L_LMT stmt* R_LMT (ELSE L_LMT stmt* R_LMT)? ;
+sentenceIf : IF relExp L_LMT stmt* R_LMT (ELSE L_LMT conjStmt R_LMT)? ;
 
 
 /****************ITERACIONS****************/
-sentenceWhile : WHILE relExp  L_LMT stmt* R_LMT ;
+sentenceWhile : WHILE relExp  L_LMT conjStmt R_LMT ;
 
 
 /****************LLISTES****************/
@@ -74,12 +73,13 @@ relExp
     ;
 
 expr 
-    : L_LMT expr R_LMT
-    | LPAR expr RPAR
-    | expr (DIV | MUL | MOD) expr 
-    | expr (ADD | SUB) expr  
-    | (listSize | listGet)
-    | (NOTE | NUM | ID)
+    : LPAR expr RPAR #Parents
+    | expr (DIV | MUL | MOD) expr #DivMulMod
+    | expr (ADD | SUB) expr  #AddSub
+    | (listSize | listGet) #Lists
+    | NOTE #Note
+    | NUM #Num
+    | ID #VarId
     ;
 
 
@@ -124,6 +124,7 @@ ELSE : 'else' ;
 NUM  : (DIGIT)+ ;
 DIGIT   : '0'..'9' ;
 ID  : [a-zA-Z]+ ;
+
 /*Notes*/
 PLAY : '<:>' ;
 NOTE : ('A' .. 'G') ('0' .. '8')? ; 

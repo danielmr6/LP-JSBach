@@ -293,11 +293,10 @@ def main():
     print(tree.toStringTree(recog=parser))
     
     notes = visitor.visit(tree)
-    
     lilyFile = open('generador.lily', 'a')
     
     for note in notes:
-          lilyFile.write("%s " % note)
+          lilyFile.write("%s'4 " % note.lower())
     
     lilyFile.write("\n }\n")
     lilyFile.write(" \layout {" "}\n")

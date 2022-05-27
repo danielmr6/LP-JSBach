@@ -11,8 +11,8 @@ Main |:
     :|
     
     <!> "Acabem While"
+    
+    <:> { A B C D }
 :|
 
-Another  |:
-	<!> "una altra funcio"
-:|
+

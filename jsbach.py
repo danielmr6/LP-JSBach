@@ -1,4 +1,6 @@
 import sys
+import shlex
+import subprocess
 from antlr4 import *
 from jsbachLexer import jsbachLexer
 from jsbachParser import jsbachParser
@@ -60,12 +62,14 @@ class EvalVisitor(jsbachVisitor):
         if 'Main' in self.dadesFunc.keys(): 
             if self.nomFuncioInicial == 'Main':
                 self.pila.append(self.dadesFunc['Main'])
-                return self.visit(self.dadesFunc['Main']['codi'])
+                self.visit(self.dadesFunc['Main']['codi'])
             else:
                 self.visit(self.dadesFunc[self.nomFuncioInicial]['codi'])
                 self.visit(self.dadesFunc['Main']['codi'])
         else:
-            raise Exception("No està definida la funció Main()")
+            raise Exception('No està definida la funció Main()')
+        
+        return self.partitura
         
     #Guardar la informació en els diccionaris
     def visitDeclFunc(self, ctx):
@@ -100,30 +104,31 @@ class EvalVisitor(jsbachVisitor):
             if numParams == 0:
                 return self.visit(self.dadesFunc[nomF]['codi'])
             else:
-                if numParams != self.dadesFunc[nomF]['parametres'])
-            
-            
+                if numParams == len(self.dadesFunc[nomF]['parametres']):
+                    print("Visitem i afegim info de la funcio")
+                else:
+                    raise Exception("Nombre de paràmetres incorrecte")
         else:
             raise Exception("Crida a procediment no definit")       
             
     def visitReadStmt(self, ctx):  
         l = list(ctx.getChildren())
         info = input()
-        key = l[0].getText()
+        key = l[1].getText()
         self.ts[key] = info
         return self.ts[key]
         
     def visitWriteStmt(self, ctx):
         l = list(ctx.getChildren())
         n = len(l)
-        res = ""
+        res = ''
         for child in range(1, n):
             var = l[child]
             if var.getSymbol().type == jsbachParser.ID:
                 if var.getText() in self.ts.keys():
                     res += ' ' + str(self.ts[var.getText()])
                 else:
-                    raise Exception("El valor a escriure no està al diccionari")
+                    raise Exception('El valor a escriure no està al diccionari')
                     
             else: 
                 res += var.getText()
@@ -211,7 +216,7 @@ class EvalVisitor(jsbachVisitor):
             elif tipus == jsbachParser.GEQ:
                 return int(opL >= opR)
             else:
-                raise Exception("Operador " + tipus + "no està definit a JSBach")
+                raise Exception('Operador ' + tipus + 'no està definit a JSBach')
             
     def visitLists(self, ctx):
         l = list(ctx.getChildren())
@@ -236,7 +241,7 @@ class EvalVisitor(jsbachVisitor):
         if ctx.getText() in self.ts.keys():
                 return self.ts[ctx.getText()]
         else:
-            raise Exception("La variable " +  ctx.getText() + "no està al diccionari")
+            raise Exception('La variable ' +  ctx.getText() + 'no està al diccionari')
     
     def visitNote(self, ctx: jsbachParser.NoteContext):
         return ctx.getText()
@@ -255,7 +260,7 @@ class EvalVisitor(jsbachVisitor):
             if exprR.getText() != '0':
                 return int(exprL/exprR)
             else:
-                raise Exception("No es pot dividir per zero!")
+                raise Exception('No es pot dividir per zero!')
                     
         elif l[1].getSymbol().type == jsbachParser.MOD:
             return int(exprL % exprR)
@@ -275,7 +280,7 @@ def main():
                     params.append(sys.argv[i])
                 visitor = EvalVisitor(nomFuncioInit, params)
         else:
-            raise Exception("El fitxer no és un programa en JSBach")
+            raise Exception('El fitxer no és un programa en JSBach')
     
     else:
         input_stream = InputStream(input('jsbach  '))
@@ -287,8 +292,21 @@ def main():
     tree = parser.root()
     print(tree.toStringTree(recog=parser))
     
-    visitor.visit(tree)
-
-
+    notes = visitor.visit(tree)
+    
+    lilyFile = open('generador.lily', 'a')
+    
+    for note in notes:
+          lilyFile.write("%s " % note)
+    
+    lilyFile.write("\n }\n")
+    lilyFile.write(" \layout {" "}\n")
+    lilyFile.write(" \midi { " "}\n")
+    lilyFile.write("}")
+    lilyFile.close()
+    
+    subprocess.call(shlex.split('lilypond generador.lily'))
+    subprocess.call(shlex.split('timidity -Ow -o generador.wav generador.midi'))
+    subprocess.call(shlex.split('ffmpeg -i generador.wav -codec:a libmp3lame -qscale:a 2 generador.mp3'))
 if __name__ == '__main__':
     main()

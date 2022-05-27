@@ -1,0 +1,9 @@
+\version "2.22.1"
+\score {
+\absolute {
+
+A B C D 
+ }
+ \layout {}
+ \midi { }
+}

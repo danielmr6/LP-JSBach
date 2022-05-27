@@ -11,6 +11,13 @@ else:
     from jsbachVisitor import jsbachVisitor
     
 class EvalVisitor(jsbachVisitor):
+    '''
+    Constuctora del visitador EvalVisitor. 
+    El primer paràmetre defineix el nom de la funció inicial que es vol executar en començar el programa, i el segon paràmetre
+    és la llista de paràmetres de la funció corresponent (si en té). Si no es passa cap nom, per defecte el programa començarà per la funció Main.
+    
+    
+    '''
     def __init__(self, nomFuncioIni: str, parametres:list):
         self.nivell = 0
         if nomFuncioIni != None and nomFuncioIni != 'Main':
@@ -52,6 +59,7 @@ class EvalVisitor(jsbachVisitor):
         
         if 'Main' in self.dadesFunc.keys(): 
             if self.nomFuncioInicial == 'Main':
+                self.pila.append(self.dadesFunc['Main'])
                 return self.visit(self.dadesFunc['Main']['codi'])
             else:
                 self.visit(self.dadesFunc[self.nomFuncioInicial]['codi'])
@@ -73,7 +81,6 @@ class EvalVisitor(jsbachVisitor):
             nomFunc = l[0].getText()
             parametres = []
             for child in range(1, n):
-                #no hem arribat al limitador esquerrà
                 if not l[child].getSymbol().type == jsbachParser.L_LMT:
                     parametres.append(l[child].getText())
                 else:
@@ -86,8 +93,19 @@ class EvalVisitor(jsbachVisitor):
     Metode quan es crida a una funció que no es el main
     '''        
     def visitCallFunc(self, ctx):
-        pass
-    
+        l = list(ctx.getChildren())
+        numParams = len(l)-1
+        nomF = l[0].getText()
+        if nomF in self.dadesFunc.keys():
+            if numParams == 0:
+                return self.visit(self.dadesFunc[nomF]['codi'])
+            else:
+                if numParams != self.dadesFunc[nomF]['parametres'])
+            
+            
+        else:
+            raise Exception("Crida a procediment no definit")       
+            
     def visitReadStmt(self, ctx):  
         l = list(ctx.getChildren())
         info = input()
@@ -122,9 +140,6 @@ class EvalVisitor(jsbachVisitor):
     
     def visitAssigs(self, ctx):
         l = list(ctx.getChildren())
-        print("Assignem !!!")
-        for i in l:
-            print(i.getText())
         key = l[0].getText()
         value  = self.visit(l[2])
         self.ts[key] = value
@@ -133,8 +148,6 @@ class EvalVisitor(jsbachVisitor):
         
     def visitSentenceWhile(self, ctx):
         l = list(ctx.getChildren())
-        for i in l:
-            print(i.getText())
         while (True):
             condition = bool(self.visitRelExp(l[1]))
             if not condition:

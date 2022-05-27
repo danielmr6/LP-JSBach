@@ -5,8 +5,14 @@ Main |:
     <!> x
     y <- x + 3
     <!> y
+    
+    while x < 3 |:
+    	x <- x + 1
+    :|
+    
+    <!> "Acabem While"
 :|
 
-Another |:
-	<!> "Comencem per una altra"
+Another  |:
+	<!> "una altra funcio"
 :|

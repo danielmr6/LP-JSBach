@@ -1,0 +1,27 @@
+
+\score {
+
+\absolute {
+
+   \tempo 4 = 120
+
+
+
+a'4 b'4 c'4 d'4 
+ }
+ \layout {}
+ \midi { }
+}
+\score {
+
+\absolute {
+
+   \tempo 4 = 120
+
+
+
+a'4 b'4 c'4 d'4 
+ }
+ \layout {}
+ \midi { }
+}

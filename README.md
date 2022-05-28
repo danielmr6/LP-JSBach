@@ -84,6 +84,8 @@ Si el programa s'executa correctament, es generaran els fitxers
 i
 `musica.mp3` amb la música en format MP3.
 
+
+
 # Lliurament
 
 Els diferents fitxers que conformen la versió final de la pràctica són:
@@ -105,3 +107,5 @@ Els diferents fitxers que conformen la versió final de la pràctica són:
 - Timidity++: https://en.wikipedia.org/wiki/TiMidity%2B%2B
 
 - ffmpeg: https://www.ffmpeg.org/
+
+- Comunicació amb processos: https://recursospython.com/guias-y-manuales/subprocess-creacion-y-comunicacion-con-procesos/

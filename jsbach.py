@@ -270,6 +270,7 @@ def main():
     
     if len(sys.argv) > 1:
         if sys.argv[1].endswith('.jsb'):
+            nomPrograma = sys.argv[1].split('.')[0]
             input_stream = FileStream(sys.argv[1])
             if len(sys.argv) == 2:
                 visitor = EvalVisitor(None, None)
@@ -293,7 +294,13 @@ def main():
     print(tree.toStringTree(recog=parser))
     
     notes = visitor.visit(tree)
-    lilyFile = open('generador.lily', 'a')
+    fitxerBase = open('generador.lily', 'r')
+    inici = ''
+    for linea in fitxerBase:
+        inici = inici + '\n' + linea
+    
+    lilyFile = open(nomPrograma + '.lily', 'a')
+    lilyFile.write(inici + '\n')
     
     for note in notes:
           lilyFile.write("%s'4 " % note.lower())
@@ -304,8 +311,8 @@ def main():
     lilyFile.write("}")
     lilyFile.close()
     
-    subprocess.call(shlex.split('lilypond generador.lily'))
-    subprocess.call(shlex.split('timidity -Ow -o generador.wav generador.midi'))
-    subprocess.call(shlex.split('ffmpeg -i generador.wav -codec:a libmp3lame -qscale:a 2 generador.mp3'))
+    subprocess.call(shlex.split('lilypond ' + nomPrograma + '.lily'))
+    subprocess.call(shlex.split('timidity -Ow -o ' + nomPrograma + '.wav ' + nomPrograma + '.midi'))
+    subprocess.call(shlex.split('ffmpeg -i ' + nomPrograma + '.wav -codec:a libmp3lame -qscale:a 2 ' + nomPrograma + '.mp3'))
 if __name__ == '__main__':
     main()

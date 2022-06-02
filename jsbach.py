@@ -19,8 +19,6 @@ class EvalVisitor(jsbachVisitor):
     Constuctora del visitador EvalVisitor. 
     El primer paràmetre defineix el nom de la funció inicial que es vol executar en començar el programa, i el segon paràmetre
     és la llista de paràmetres de la funció corresponent (si en té). Si no es passa cap nom, per defecte el programa començarà per la funció Main.
-
-
     '''
 
     def __init__(self, nomFuncioIni: str, parametres: list):
@@ -83,18 +81,17 @@ class EvalVisitor(jsbachVisitor):
             posCodi = 2
             blocCodi = l[posCodi]
             self.dadesFunc[nomFunc] = {'parametres': [], 'codi': blocCodi}
-            print(self.dadesFunc)
         else:
             nomFunc = l[0].getText()
             parametres = []
-            for child in range(1, n):
-                if not l[child].getSymbol().type == jsbachParser.L_LMT:
+            for child in range(1, n-3):
                     parametres.append(l[child].getText())
-                else:
-                    posCodi = child+1
-                    blocCodi = l[posCodi]
+            posCodi = n-2
+            blocCodi = l[posCodi]
             self.dadesFunc[nomFunc] = {
-                'parametres': parametres, 'codi': blocCodi}
+                'parametres': parametres, 'codi': blocCodi
+                }
+        print(self.dadesFunc)
 
     '''
     Metode quan es crida a una funció que no es el main
@@ -108,8 +105,14 @@ class EvalVisitor(jsbachVisitor):
             if numParams == 0:
                 return self.visit(self.dadesFunc[nomF]['codi'])
             else:
-                if numParams == len(self.dadesFunc[nomF]['parametres']):
+                nparGuardats = len(self.dadesFunc[nomF]['parametres'])
+                if numParams == nparGuardats:
                     print("Visitem i afegim info de la funcio")
+                    for i in range(1, nparGuardats):
+                        self.ts[self.dadesFunc[nomF]['parametres'][i]] = l[i].getText()
+                    
+                    print(self.ts)
+                    self.visit(self.dadesFunc[nomF]['codi'])
                 else:
                     raise Exception("Nombre de paràmetres incorrecte")
         else:
@@ -132,16 +135,14 @@ class EvalVisitor(jsbachVisitor):
                 if var.getText() in self.ts.keys():
                     res += ' ' + str(self.ts[var.getText()])
                 else:
-                    raise Exception(
-                        'El valor a escriure no està al diccionari')
-
+                    raise Exception('El valor a escriure no està al diccionari')
             else:
                 res += var.getText()
         print(res)
 
     def visitSentenceIf(self, ctx):
         l = list(ctx.getChildren())
-        condition = bool(self.visitRelExp(l[1]))
+        condition = bool(self.visit(l[1]))
         if condition:
             return self.visit(l[3])
         elif len(l) == 9:
@@ -152,6 +153,7 @@ class EvalVisitor(jsbachVisitor):
         key = l[0].getText()
         value = self.visit(l[2])
         self.ts[key] = value
+        print(self.ts)
         return value
 
     def visitSentenceWhile(self, ctx):
@@ -229,13 +231,17 @@ class EvalVisitor(jsbachVisitor):
         exprL = self.visit(l[0])
         exprR = self.visit(l[2])
         if l[1].getSymbol().type == jsbachParser.SUB:
-            return int(exprL) - int(exprR)
+            return int(exprL - exprR)
 
         elif l[1].getSymbol().type == jsbachParser.ADD:
-            return int(exprL) + int(exprR)
+            print(exprL)
+            print(exprR)
+            return int(exprL + exprR)
 
-    def visitParents(self, ctx):
+    def visitParentesis(self, ctx):
         l = list(ctx.getChildren())
+        for i in l:
+            print(i.getText())
         return self.visit(l[1])
 
     def visitVarId(self, ctx):
@@ -253,8 +259,8 @@ class EvalVisitor(jsbachVisitor):
 
     def visitDivMulMod(self, ctx):
         l = list(ctx.getChildren())
-        exprL = self.visitExpr(l[0])
-        exprR = self.visitExpr(l[2])
+        exprL = self.visit(l[0])
+        exprR = self.visit(l[2])
         if l[1].getSymbol().type == jsbachParser.MUL:
             return int(exprL * exprR)
 
@@ -296,7 +302,7 @@ def main():
     print(tree.toStringTree(recog=parser))
 
     notes = visitor.visit(tree)
-    fitxerBase = open('generador.lily', 'r')
+    ''' fitxerBase = open('generador.lily', 'r')
     inici = ''
     for linea in fitxerBase:
         inici = inici + '\n' + linea
@@ -322,5 +328,6 @@ def main():
     remove(nomPrograma + '.lily')
     remove(nomPrograma + '.midi')
     remove(nomPrograma + '.wav')
+    '''
 if __name__ == '__main__':
     main()

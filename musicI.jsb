@@ -1,18 +1,27 @@
 ~~~ Kleines Program in JSBach ~~~
 
 Main |: 
-    x <- 10 + 2
+    x <- 1+2
     <!> x
-    y <- x + 3
+    y <- (x + 3)
     <!> y
     
-    while x < 3 |:
+    while x < 7 |:
     	x <- x + 1
     :|
     
     <!> "Acabem While"
-    
+    <!> x
     <:> { A B C D E F G}
+    
+  
+    Altra  89
 :|
+
+Altra n |:
+	<!> n
+:|
+
+
 
 

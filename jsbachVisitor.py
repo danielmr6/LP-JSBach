@@ -19,11 +19,6 @@ class jsbachVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by jsbachParser#callFunc.
-    def visitCallFunc(self, ctx:jsbachParser.CallFuncContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by jsbachParser#conjStmt.
     def visitConjStmt(self, ctx:jsbachParser.ConjStmtContext):
         return self.visitChildren(ctx)
@@ -31,6 +26,11 @@ class jsbachVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by jsbachParser#stmt.
     def visitStmt(self, ctx:jsbachParser.StmtContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by jsbachParser#callFunc.
+    def visitCallFunc(self, ctx:jsbachParser.CallFuncContext):
         return self.visitChildren(ctx)
 
 
@@ -114,8 +114,8 @@ class jsbachVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by jsbachParser#Parents.
-    def visitParents(self, ctx:jsbachParser.ParentsContext):
+    # Visit a parse tree produced by jsbachParser#Parentesis.
+    def visitParentesis(self, ctx:jsbachParser.ParentesisContext):
         return self.visitChildren(ctx)
 
 

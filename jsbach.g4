@@ -4,9 +4,7 @@ root : declFunc+ EOF ;
 
 
 /****************PROCEDIMENTS****************/
-declFunc : ID L_LMT conjStmt R_LMT ;
-
-callFunc : ID (ID | expr )* ;
+declFunc : FNC_NAME (expr)* L_LMT conjStmt R_LMT ;
 
 
 /**************** CONJUNT D'INSTRUCCIONS****************/
@@ -17,11 +15,13 @@ stmt
     | (expr | relExp)
     ;
 
+callFunc : FNC_NAME (expr)* ;
+
 /*****************ASSIGNACIÓ****************/
 assigs : ID ASSIG expr ;
 
 /****************LECTURA****************/
-readStmt : READ ID ;
+readStmt : READ ID;
 
 
 /****************ESCRIPTURA****************/
@@ -68,12 +68,12 @@ playStmt
 /****************EXPRESSIONS****************/
 
 relExp 
-    : expr (EQ | DIF | LST | GRT | GREQ | LSEQ) expr 
-    | (TRUE | FALSE | expr)
+    : (expr) (EQ | DIF | LST | GRT | GREQ | LSEQ) (expr) 
+    | NUM
     ;
 
 expr 
-    : LPAR expr RPAR #Parents
+    : LPAR expr RPAR #Parentesis
     | expr (DIV | MUL | MOD) expr #DivMulMod
     | expr (ADD | SUB) expr  #AddSub
     | (listSize | listGet) #Lists
@@ -101,8 +101,6 @@ LST : '<' ;
 GRT : '>' ; 
 GREQ : '>=' ;
 LSEQ :  '<=';
-TRUE : '1' ;
-FALSE : '0' ;
 
 
 /*Limitadors*/ 
@@ -112,7 +110,6 @@ L_KEY : '[' ;
 R_KEY : ']' ;
 LPAR : '(' ;
 RPAR : ')' ;
-TXT : '"' ;
 
 /*Condicionals i iteracions*/
 IF : 'if' ;
@@ -122,7 +119,8 @@ ELSE : 'else' ;
 
 /*Definicions bàsiques*/
 NUM  : (DIGIT)+ ;
-DIGIT   : '0'..'9' ;
+DIGIT   : ('0'..'9') ;
+FNC_NAME : [A-Z] [a-z]+ ;
 ID  : [a-zA-Z]+ ;
 
 /*Notes*/

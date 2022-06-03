@@ -34,11 +34,6 @@ class jsbachVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by jsbachParser#assigs.
-    def visitAssigs(self, ctx:jsbachParser.AssigsContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by jsbachParser#readStmt.
     def visitReadStmt(self, ctx:jsbachParser.ReadStmtContext):
         return self.visitChildren(ctx)
@@ -46,6 +41,11 @@ class jsbachVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by jsbachParser#writeStmt.
     def visitWriteStmt(self, ctx:jsbachParser.WriteStmtContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by jsbachParser#assigs.
+    def visitAssigs(self, ctx:jsbachParser.AssigsContext):
         return self.visitChildren(ctx)
 
 

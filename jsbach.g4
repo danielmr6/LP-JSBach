@@ -4,7 +4,7 @@ root : declFunc+ EOF ;
 
 
 /****************PROCEDIMENTS****************/
-declFunc : FNC_NAME (expr)* L_LMT conjStmt R_LMT ;
+declFunc : FNC_NAME (ID)* L_LMT conjStmt R_LMT ;
 
 
 /**************** CONJUNT D'INSTRUCCIONS****************/
@@ -17,16 +17,18 @@ stmt
 
 callFunc : FNC_NAME (expr)* ;
 
-/*****************ASSIGNACIÓ****************/
-assigs : ID ASSIG expr ;
+
 
 /****************LECTURA****************/
 readStmt : READ ID;
 
 
 /****************ESCRIPTURA****************/
-writeStmt : WRITE (ID | expr | CADENA)* ; 
+writeStmt : WRITE (expr | CADENA)* ; 
 
+
+/*****************ASSIGNACIÓ****************/
+assigs : ID ASSIG expr ;
 
 /****************CONDICIONAL****************/
 sentenceIf : IF relExp L_LMT stmt* R_LMT (ELSE L_LMT conjStmt R_LMT)? ;
@@ -120,12 +122,12 @@ ELSE : 'else' ;
 /*Definicions bàsiques*/
 NUM  : (DIGIT)+ ;
 DIGIT   : ('0'..'9') ;
-FNC_NAME : [A-Z] [a-z]+ ;
-ID  : [a-zA-Z]+ ;
+FNC_NAME : [A-Z][a-z]+ ;
+ID  : [a-z][a-zA-Z]* ;
 
 /*Notes*/
 PLAY : '<:>' ;
-NOTE : ('A' .. 'G') ('0' .. '8')? ; 
+NOTE : ('A' .. 'G') ('0' .. '8')* ; 
 
 /*Operadors amb llistes*/
 LIST_ADD : '<<' ;

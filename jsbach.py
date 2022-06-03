@@ -14,6 +14,32 @@ else:
     from jsbachVisitor import jsbachVisitor
 
 
+class Heap:
+    
+    def __init__(self):
+        self.__stack = list()  
+        self.__nomFuncio = ''
+        
+    def getNameFunc(self):
+        self.__nomFuncio = self.__stack[0]['nom']
+        return self.__nomFuncio
+    
+    def getValue(self):
+        return self.__stack[0]
+        
+    def removeTop(self):
+        return self.__stack.pop(0)
+    
+    def insertTop(self, dic : dict):
+        self.__stack.insert(0, dic)
+        
+    def isEmpty(self):
+        return self.__stack == []
+    
+    
+
+
+
 class EvalVisitor(jsbachVisitor):
     '''
     Constuctora del visitador EvalVisitor. 
@@ -22,25 +48,24 @@ class EvalVisitor(jsbachVisitor):
     '''
 
     def __init__(self, nomFuncioIni: str, parametres: list):
-        self.nivell = 0
+        self.stack = Heap()
         if nomFuncioIni != None and nomFuncioIni != 'Main':
             self.nomFuncioInicial = nomFuncioIni
-            self.parametres = parametres
+            self.parametresIni = parametres
         else:
             self.nomFuncioInicial = 'Main'
-            self.parametres = []
+            self.parametresIni = []
 
-        self.ts = {}
-        self.pila = []
         self.dadesFunc = {}
         self.partitura = []
 
         '''dadesFunc = 
         { 
         "Main" : { 
+                   "nom" = Main
                    "parametres" : [] , 
                    "codi" : ...,
-                   "taulaSimbols" : 
+                   "ts" : 
                    {
                     "nomVariable" : valor ...   
                    }
@@ -59,20 +84,29 @@ class EvalVisitor(jsbachVisitor):
         n = len(l)
         for i in range(0, n):
             self.visit(l[i])
-
-        if 'Main' in self.dadesFunc.keys():
-            if self.nomFuncioInicial == 'Main':
-                self.pila.append(self.dadesFunc['Main'])
+        
+        if self.nomFuncioInicial == 'Main':
+            if 'Main' in self.dadesFunc.keys():
+                copiaDic = self.dadesFunc['Main']
+                self.stack.insertTop(copiaDic)
                 self.visit(self.dadesFunc['Main']['codi'])
             else:
-                self.visit(self.dadesFunc[self.nomFuncioInicial]['codi'])
-                self.visit(self.dadesFunc['Main']['codi'])
+                raise Exception('No està definida la funció Main()')
         else:
-            raise Exception('No està definida la funció Main()')
-
+                if self.nomFuncioInicial in self.dadesFunc.keys():
+                    nParams = len(self.dadesFunc[self.nomFuncioInicial]['parametres'])
+                    if len(self.parametresIni) == nParams:
+                        nou_dic = {'nom' : self.nomFuncioInicial, 'parametres' : self.dadesFunc[self.nomFuncioInicial]['parametres'].copy(), 
+                                   'ts' : self.dadesFunc[self.nomFuncioInicial]['ts']}
+                        self.stack.insertTop(nou_dic)
+                        self.visit(self.dadesFunc[self.nomFuncioInicial]['codi'])
+                    else:
+                        raise Exception('El nombre de paràmetres no és correcte')
+                else:
+                    raise Exception('No està definit el mètode' + self.nomFuncioInicial)
+    
         return self.partitura
 
-    # Guardar la informació en els diccionaris
     def visitDeclFunc(self, ctx):
         l = list(ctx.getChildren())
         n = len(l)
@@ -80,64 +114,61 @@ class EvalVisitor(jsbachVisitor):
             nomFunc = l[0].getText()
             posCodi = 2
             blocCodi = l[posCodi]
-            self.dadesFunc[nomFunc] = {'parametres': [], 'codi': blocCodi}
+            self.dadesFunc[nomFunc] = {'nom' : nomFunc, 'parametres': [], 'codi': blocCodi, 'ts' : {}}
         else:
             nomFunc = l[0].getText()
             parametres = []
+            tsAux = {}
             for child in range(1, n-3):
                     parametres.append(l[child].getText())
+                    tsAux[l[child].getText()] = 0
             posCodi = n-2
             blocCodi = l[posCodi]
-            self.dadesFunc[nomFunc] = {
-                'parametres': parametres, 'codi': blocCodi
-                }
-        print(self.dadesFunc)
-
-    '''
-    Metode quan es crida a una funció que no es el main
-    '''
-
+            self.dadesFunc[nomFunc] = {'nom' : nomFunc, 'parametres' : parametres, 'codi' : blocCodi, 'ts' : tsAux}
+           
+  
+  
     def visitCallFunc(self, ctx):
         l = list(ctx.getChildren())
         numParams = len(l)-1
         nomF = l[0].getText()
+        nou_dic = {'nom' : nomF, 'parametres' : self.dadesFunc[nomF]['parametres'].copy(), 
+                   'codi' : self.dadesFunc[nomF]['codi'], 'ts': self.dadesFunc[nomF]['ts'].copy()}
+    
         if nomF in self.dadesFunc.keys():
             if numParams == 0:
-                return self.visit(self.dadesFunc[nomF]['codi'])
+                return self.visit(nou_dic['codi'])
             else:
                 nparGuardats = len(self.dadesFunc[nomF]['parametres'])
                 if numParams == nparGuardats:
-                    print("Visitem i afegim info de la funcio")
-                    for i in range(1, nparGuardats):
-                        self.ts[self.dadesFunc[nomF]['parametres'][i]] = l[i].getText()
-                    
-                    print(self.ts)
-                    self.visit(self.dadesFunc[nomF]['codi'])
+                    for i in range(0, nparGuardats):
+                        valorParametre = self.visit(l[i+1])
+                        nomPar = nou_dic['parametres'][i]
+                        nou_dic['ts'][nomPar] = valorParametre
+                    self.stack.insertTop(nou_dic)
+                    self.visit(nou_dic['codi'])
                 else:
-                    raise Exception("Nombre de paràmetres incorrecte")
+                    raise Exception('Crida al mètode ' + nomF + ' amb nombre de paràmetres incorrecte')
         else:
-            raise Exception("Crida a procediment no definit")
+            raise Exception('Crida a procediment no definit')
 
     def visitReadStmt(self, ctx):
         l = list(ctx.getChildren())
         info = input()
         key = l[1].getText()
-        self.ts[key] = info
-        return self.ts[key]
+        self.stack.getValue()['ts'][key] = info
+        
 
     def visitWriteStmt(self, ctx):
         l = list(ctx.getChildren())
         n = len(l)
         res = ''
-        for child in range(1, n):
-            var = l[child]
-            if var.getSymbol().type == jsbachParser.ID:
-                if var.getText() in self.ts.keys():
-                    res += ' ' + str(self.ts[var.getText()])
-                else:
-                    raise Exception('El valor a escriure no està al diccionari')
+        for child in range(1,n):
+            valor = self.visit(l[child])
+            if valor:
+                res += ' ' + str(valor)       
             else:
-                res += var.getText()
+                res += l[child].getText()
         print(res)
 
     def visitSentenceIf(self, ctx):
@@ -152,8 +183,7 @@ class EvalVisitor(jsbachVisitor):
         l = list(ctx.getChildren())
         key = l[0].getText()
         value = self.visit(l[2])
-        self.ts[key] = value
-        print(self.ts)
+        self.stack.getValue()['ts'][key] = value
         return value
 
     def visitSentenceWhile(self, ctx):
@@ -234,22 +264,18 @@ class EvalVisitor(jsbachVisitor):
             return int(exprL - exprR)
 
         elif l[1].getSymbol().type == jsbachParser.ADD:
-            print(exprL)
-            print(exprR)
             return int(exprL + exprR)
 
     def visitParentesis(self, ctx):
         l = list(ctx.getChildren())
-        for i in l:
-            print(i.getText())
         return self.visit(l[1])
 
     def visitVarId(self, ctx):
-        if ctx.getText() in self.ts.keys():
-            return self.ts[ctx.getText()]
+        if ctx.getText() in self.stack.getValue()['ts'].keys():
+            return self.stack.getValue()['ts'][ctx.getText()]
         else:
             raise Exception('La variable ' + ctx.getText() +
-                            'no està al diccionari')
+                            ' no està al diccionari')
 
     def visitNote(self, ctx: jsbachParser.NoteContext):
         return ctx.getText()

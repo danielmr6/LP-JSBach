@@ -12,10 +12,9 @@ Main |:
     
     <!> "Acabem While"
     <!> x
-    <:> { A B C D E F G}
+    <:> { A B C D E F G }
     
-  
-    Altra  89
+    Altra x
 :|
 
 Altra n |:

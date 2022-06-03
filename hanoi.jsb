@@ -9,4 +9,5 @@ Hanoi n ori dst aux |:
         <!> ori "->" dst
         Hanoi (n - 1) aux dst ori
     :|
+  
 :|

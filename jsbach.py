@@ -59,26 +59,21 @@ class EvalVisitor(jsbachVisitor):
         self.dadesFunc = {}
         self.partitura = []
 
-        '''dadesFunc = 
-        { 
-        "Main" : { 
-                   "nom" = Main
-                   "parametres" : [] , 
-                   "codi" : ...,
-                   "ts" : 
-                   {
-                    "nomVariable" : valor ...   
-                   }
-                }
-        }
-        Fem un diccionari tenint com a clau el nom de la funcio i com a valor una tupla amb 
-        parametres i el codi de la funcio
-        
-         En DeclFunc guardamos la informacion de la funcion en dadesFunc y el callFunc ejecuta.
-         Despues de recorrer todo, miramos si esta el main, si esta llamamos  y pasamos el valor de codi.
-         Si no está, excepción.
-         '''
-
+    '''
+    dadesFunc = 
+    { 
+    'Main' : { 
+               'nom' = Main
+               'parametres' : llista amb els noms dels paràmetres, 
+               'codi' : bloc de codi,
+                'ts' : { 'nomVariable' : valor , ...}
+            }
+    }
+    Fem un diccionari tenint com a clau el nom de la funcio i com a valor un altre diccionari més intern 
+    que conté com a clau el camp 'nom', amb el seu respectiu nom de la funció, el camp 'parametres', on es 
+    guarden els diferents noms, el camp 'codi' on es guarda la referència per visitar el codi de la funció 
+    i el camp 'ts', el qual guarda tota la informació relacionada amb les variables i els paràmetres.
+    '''
     def visitRoot(self, ctx):
         l = list(ctx.getChildren())
         n = len(l)
@@ -90,6 +85,7 @@ class EvalVisitor(jsbachVisitor):
                 copiaDic = self.dadesFunc['Main']
                 self.stack.insertTop(copiaDic)
                 self.visit(self.dadesFunc['Main']['codi'])
+                self.stack.removeTop()
             else:
                 raise Exception('No està definida la funció Main()')
         else:
@@ -97,9 +93,10 @@ class EvalVisitor(jsbachVisitor):
                     nParams = len(self.dadesFunc[self.nomFuncioInicial]['parametres'])
                     if len(self.parametresIni) == nParams:
                         nou_dic = {'nom' : self.nomFuncioInicial, 'parametres' : self.dadesFunc[self.nomFuncioInicial]['parametres'].copy(), 
-                                   'ts' : self.dadesFunc[self.nomFuncioInicial]['ts']}
+                                   'ts' : self.dadesFunc[self.nomFuncioInicial]['ts'].copy()}
                         self.stack.insertTop(nou_dic)
                         self.visit(self.dadesFunc[self.nomFuncioInicial]['codi'])
+                        self.stack.removeTop()
                     else:
                         raise Exception('El nombre de paràmetres no és correcte')
                 else:
@@ -132,23 +129,23 @@ class EvalVisitor(jsbachVisitor):
         l = list(ctx.getChildren())
         numParams = len(l)-1
         nomF = l[0].getText()
-        nou_dic = {'nom' : nomF, 'parametres' : self.dadesFunc[nomF]['parametres'].copy(), 
+        nou_dic = {'nom' : nomF, 'parametres' : list(self.dadesFunc[nomF]['parametres']), 
                    'codi' : self.dadesFunc[nomF]['codi'], 'ts': self.dadesFunc[nomF]['ts'].copy()}
-    
+
         if nomF in self.dadesFunc.keys():
-            if numParams == 0:
-                return self.visit(nou_dic['codi'])
+            nparGuardats = len(self.dadesFunc[nomF]['parametres'])
+            if numParams == nparGuardats:
+                for i in range(0, nparGuardats):
+                    valorParametre = self.visit(l[i+1])
+                    nomPar = nou_dic['parametres'][i]
+                    nou_dic['ts'][nomPar] = valorParametre
+                self.stack.insertTop(nou_dic)
+                self.visit(nou_dic['codi'])
+                self.stack.removeTop()
+                            
             else:
-                nparGuardats = len(self.dadesFunc[nomF]['parametres'])
-                if numParams == nparGuardats:
-                    for i in range(0, nparGuardats):
-                        valorParametre = self.visit(l[i+1])
-                        nomPar = nou_dic['parametres'][i]
-                        nou_dic['ts'][nomPar] = valorParametre
-                    self.stack.insertTop(nou_dic)
-                    self.visit(nou_dic['codi'])
-                else:
-                    raise Exception('Crida al mètode ' + nomF + ' amb nombre de paràmetres incorrecte')
+                raise Exception('Crida al mètode ' + nomF + ' amb nombre de paràmetres incorrecte')
+            
         else:
             raise Exception('Crida a procediment no definit')
 
@@ -156,7 +153,7 @@ class EvalVisitor(jsbachVisitor):
         l = list(ctx.getChildren())
         info = input()
         key = l[1].getText()
-        self.stack.getValue()['ts'][key] = info
+        self.stack.getValue()['ts'][key] = int(info)
         
 
     def visitWriteStmt(self, ctx):
@@ -168,12 +165,12 @@ class EvalVisitor(jsbachVisitor):
             if valor:
                 res += ' ' + str(valor)       
             else:
-                res += l[child].getText()
+                res += ' ' + l[child].getText()[1:-1]
         print(res)
 
     def visitSentenceIf(self, ctx):
         l = list(ctx.getChildren())
-        condition = bool(self.visit(l[1]))
+        condition = self.visitRelExp(l[1])
         if condition:
             return self.visit(l[3])
         elif len(l) == 9:
@@ -189,7 +186,7 @@ class EvalVisitor(jsbachVisitor):
     def visitSentenceWhile(self, ctx):
         l = list(ctx.getChildren())
         while (True):
-            condition = bool(self.visitRelExp(l[1]))
+            condition = self.visitRelExp(l[1])
             if not condition:
                 break
             self.visit(l[3])
@@ -231,11 +228,11 @@ class EvalVisitor(jsbachVisitor):
             numero = int(l[0].getText())
             if numero > 0:
                 return 1
-            else:
+            elif numero == 0:
                 return 0
         else:
-            opL = self.visit(l[0])
-            opR = self.visit(l[2])
+            opL = int(self.visit(l[0]))
+            opR = int(self.visit(l[2]))
             tipus = l[1].getSymbol().type
             if tipus == jsbachParser.EQ:
                 return int(opL == opR)
@@ -258,8 +255,8 @@ class EvalVisitor(jsbachVisitor):
 
     def visitAddSub(self, ctx):
         l = list(ctx.getChildren())
-        exprL = self.visit(l[0])
-        exprR = self.visit(l[2])
+        exprL = int(self.visit(l[0]))
+        exprR = int(self.visit(l[2]))
         if l[1].getSymbol().type == jsbachParser.SUB:
             return int(exprL - exprR)
 

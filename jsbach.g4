@@ -59,7 +59,7 @@ La gramàtica d'escriptura d'un valor ve definida pel token d'escriptura, seguit
 o una expressió. Una cadena està formada per les cometes '"', després tota la informació que es vulgui donar excepte: \n, \r i |t, 
 i per finalitzar les cometes '"' que tanquen la cadena.
 */
-writeStmt : WRITE (expr | CADENA)* ; 
+writeStmt : WRITE (listGet | listSize |expr | CADENA)* ; 
 
 
 /*****************ASSIGNACIÓ****************/
@@ -67,7 +67,9 @@ writeStmt : WRITE (expr | CADENA)* ;
 Una assignació està formada pel primer token que es un ID, la variable on es guardarà la informació, seguida del token d'assignar i després
 l'expressió, que conté el valor el qual es vol guardar.
 */
-assigs : ID ASSIG expr ;
+assigs : ID ASSIG expr 
+    | ID ASSIG listConst 
+    ;
 
 /****************CONDICIONAL****************/
 /*
@@ -91,14 +93,11 @@ sentenceWhile : WHILE relExp  L_LMT conjStmt R_LMT ;
 listStmt
     : listAddStmt 
     | listCutStmt 
-    | listDeclStmt
     | listGet
     | listSize
     ;
 
-listConst : '{' (expr)* '}' ;
-
-listDeclStmt : ID ASSIG listConst ;
+listConst : '{' (NUM | NOTE )* '}' ;
 
 listAddStmt: ID LIST_ADD (expr) ;
 
@@ -127,7 +126,6 @@ expr
     : LPAR expr RPAR #Parentesis
     | expr (DIV | MUL | MOD) expr #DivMulMod
     | expr (ADD | SUB) expr  #AddSub
-    | (listSize | listGet) #Lists
     | NOTE #Note
     | NUM #Num
     | ID #VarId

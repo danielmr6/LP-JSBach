@@ -69,11 +69,6 @@ class jsbachVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by jsbachParser#listDeclStmt.
-    def visitListDeclStmt(self, ctx:jsbachParser.ListDeclStmtContext):
-        return self.visitChildren(ctx)
-
-
     # Visit a parse tree produced by jsbachParser#listAddStmt.
     def visitListAddStmt(self, ctx:jsbachParser.ListAddStmtContext):
         return self.visitChildren(ctx)
@@ -101,11 +96,6 @@ class jsbachVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by jsbachParser#relExp.
     def visitRelExp(self, ctx:jsbachParser.RelExpContext):
-        return self.visitChildren(ctx)
-
-
-    # Visit a parse tree produced by jsbachParser#Lists.
-    def visitLists(self, ctx:jsbachParser.ListsContext):
         return self.visitChildren(ctx)
 
 

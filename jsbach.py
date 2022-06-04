@@ -14,6 +14,17 @@ else:
     from jsbachVisitor import jsbachVisitor
 
 
+class Notes:
+    def __init__(self):
+        self.__notes = { 'AO' : 1 , 'B0' : 2, 'C1' : 3 ,
+            
+            
+            
+            
+            
+        }
+
+
 class Heap:
     
     def __init__(self):
@@ -141,8 +152,7 @@ class EvalVisitor(jsbachVisitor):
                     nou_dic['ts'][nomPar] = valorParametre
                 self.stack.insertTop(nou_dic)
                 self.visit(nou_dic['codi'])
-                self.stack.removeTop()
-                            
+                self.stack.removeTop()                
             else:
                 raise Exception('Crida al mètode ' + nomF + ' amb nombre de paràmetres incorrecte')
             
@@ -178,8 +188,12 @@ class EvalVisitor(jsbachVisitor):
 
     def visitAssigs(self, ctx):
         l = list(ctx.getChildren())
+        n = len(l)
         key = l[0].getText()
-        value = self.visit(l[2])
+        if self.visit(l[2]) == '{':
+            value = self.visitListConst(l[2])
+        else:
+            value = self.visit(l[2])
         self.stack.getValue()['ts'][key] = value
         return value
 
@@ -191,14 +205,13 @@ class EvalVisitor(jsbachVisitor):
                 break
             self.visit(l[3])
 
-    def visitListStmt(self, ctx):
-        pass
-
     def visitListConst(self, ctx):
-        pass
-
-    def visitListDeclStmt(self, ctx):
-        pass
+        l = list(ctx.getChildren())
+        n = len(l)
+        valorsAux = []
+        for i in range(1, n-1):
+            valorsAux.append(l[i].getText())
+        return valorsAux
 
     def visitListAddStmt(self, ctx):
         pass
@@ -207,10 +220,30 @@ class EvalVisitor(jsbachVisitor):
         pass
 
     def visitListSize(self, ctx):
-        pass
+        l = list(ctx.getChildren())
+        nomllista = self.visit(l[1])
+        llistaAux = self.stack.getValue()['ts'][nomllista]
+        return len(llistaAux)
+        
 
     def visitListGet(self, ctx):
-        pass
+        l = list(ctx.getChildren())
+        index = self.visit(l[2])-1
+        if index >= 0:
+            noml = l[0].getText()
+            print(noml)
+            print(self.stack.getValue()['ts'])
+            if noml in self.stack.getValue()['ts'].keys():
+                llista = self.stack.getValue()['ts'][noml]
+                if len(llista) >= 1 and index <= (len(llista)-1):
+                    return llista[index]
+                else:
+                    raise Exception('No existeix el element i-èsim a la llista')
+            else:
+                raise Exception('No existeix cap llista amb el nom ' + noml)  
+        else:
+            raise Exception('Índex erroni: el valor mínim ha de ser 1!')
+        
 
     def visitPlayStmt(self, ctx):
         l = list(ctx.getChildren())
@@ -249,9 +282,6 @@ class EvalVisitor(jsbachVisitor):
             else:
                 raise Exception('Operador ' + tipus +
                                 'no està definit a JSBach')
-
-    def visitLists(self, ctx):
-        l = list(ctx.getChildren())
 
     def visitAddSub(self, ctx):
         l = list(ctx.getChildren())

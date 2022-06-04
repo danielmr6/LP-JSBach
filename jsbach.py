@@ -214,8 +214,16 @@ class EvalVisitor(jsbachVisitor):
         return valorsAux
 
     def visitListAddStmt(self, ctx):
-        pass
-
+        l = list(ctx.getChildren())
+        noml = l[0].getText()
+        element = self.visit(l[2])
+        if noml in self.stack.getValue()['ts'].keys():
+            llista = self.stack.getValue()['ts'][noml]
+            llista.append(element)
+        else:
+            raise Exception('No existeix cap llista amb el nom ' + noml)  
+            
+        
     def visitListCut(self, ctx):
         pass
 
@@ -231,8 +239,6 @@ class EvalVisitor(jsbachVisitor):
         index = self.visit(l[2])-1
         if index >= 0:
             noml = l[0].getText()
-            print(noml)
-            print(self.stack.getValue()['ts'])
             if noml in self.stack.getValue()['ts'].keys():
                 llista = self.stack.getValue()['ts'][noml]
                 if len(llista) >= 1 and index <= (len(llista)-1):

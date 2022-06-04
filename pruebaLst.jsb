@@ -3,7 +3,9 @@
 Hanoi |:
     src <- {C D E F G}
     <!> src[1]
-    <!> src[-4]
+    x <- A
+    src << x
+    <!> src
 :|
 
 

@@ -35,6 +35,9 @@ class Heap:
         self.__nomFuncio = self.__stack[0]['nom']
         return self.__nomFuncio
     
+    def existsInTs(self, word:str):
+        return (word in self.__stack[0]['ts'].keys())
+
     def getValue(self):
         return self.__stack[0]
         
@@ -220,26 +223,43 @@ class EvalVisitor(jsbachVisitor):
         if noml in self.stack.getValue()['ts'].keys():
             llista = self.stack.getValue()['ts'][noml]
             llista.append(element)
+            self.stack.getValue()['ts'][noml] = llista
         else:
             raise Exception('No existeix cap llista amb el nom ' + noml)  
             
         
-    def visitListCut(self, ctx):
-        pass
+    def visitListCutStmt(self, ctx):
+        l = list(ctx.getChildren())
+        noml = l[1].getText() 
+        index = self.visit(l[3])-1
+        if index >= 0:
+            nomllista = l[1].getText()
+            if self.stack.existsInTs(nomllista):
+                llista = self.stack.getValue()['ts'][nomllista]
+                if len(llista) >= 1 and index <= (len(llista)-1):
+                    llista.pop(index)
+                    self.stack.getValue()['ts'][nomllista] = llista
+                else:
+                    raise Exception('No existeix el element i-èsim a la llista')
+            else:
+                raise Exception('No existeix cap llista amb el nom ' + noml)
+        else:
+            raise Exception('Índex erroni: el valor mínim ha de ser 1!')
+        
+            
 
     def visitListSize(self, ctx):
         l = list(ctx.getChildren())
-        nomllista = self.visit(l[1])
+        nomllista = l[1].getText()
         llistaAux = self.stack.getValue()['ts'][nomllista]
         return len(llistaAux)
         
-
     def visitListGet(self, ctx):
         l = list(ctx.getChildren())
         index = self.visit(l[2])-1
         if index >= 0:
             noml = l[0].getText()
-            if noml in self.stack.getValue()['ts'].keys():
+            if self.stack.existsInTs(noml):
                 llista = self.stack.getValue()['ts'][noml]
                 if len(llista) >= 1 and index <= (len(llista)-1):
                     return llista[index]

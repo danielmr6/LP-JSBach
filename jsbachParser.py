@@ -8,7 +8,7 @@ import sys
 def serializedATN():
     with StringIO() as buf:
         buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3)")
-        buf.write("\u00c9\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
+        buf.write("\u00ce\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7")
         buf.write("\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4\f\t\f\4\r\t\r\4\16")
         buf.write("\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22\4\23\t\23")
         buf.write("\4\24\t\24\3\2\6\2*\n\2\r\2\16\2+\3\2\3\2\3\3\3\3\7\3")
@@ -20,73 +20,76 @@ def serializedATN():
         buf.write("\3\n\3\n\3\n\3\n\3\n\3\n\3\n\5\nw\n\n\3\13\3\13\3\13\3")
         buf.write("\13\3\13\3\13\3\f\3\f\3\f\3\f\5\f\u0083\n\f\3\r\3\r\7")
         buf.write("\r\u0087\n\r\f\r\16\r\u008a\13\r\3\r\3\r\3\16\3\16\3\16")
-        buf.write("\3\16\3\17\3\17\3\17\3\17\3\17\3\17\3\20\3\20\3\20\3\21")
-        buf.write("\3\21\3\21\3\21\3\21\3\22\3\22\3\22\6\22\u00a3\n\22\r")
-        buf.write("\22\16\22\u00a4\3\22\3\22\3\22\3\22\5\22\u00ab\n\22\3")
-        buf.write("\23\3\23\3\23\3\23\3\23\5\23\u00b2\n\23\3\24\3\24\3\24")
-        buf.write("\3\24\3\24\3\24\3\24\3\24\5\24\u00bc\n\24\3\24\3\24\3")
-        buf.write("\24\3\24\3\24\3\24\7\24\u00c4\n\24\f\24\16\24\u00c7\13")
-        buf.write("\24\3\24\2\3&\25\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36")
-        buf.write(" \"$&\2\6\4\2\27\27\34\34\3\2\b\r\3\2#%\3\2!\"\2\u00d4")
-        buf.write("\2)\3\2\2\2\4/\3\2\2\2\6=\3\2\2\2\bN\3\2\2\2\nP\3\2\2")
-        buf.write("\2\fW\3\2\2\2\16Z\3\2\2\2\20j\3\2\2\2\22l\3\2\2\2\24x")
-        buf.write("\3\2\2\2\26\u0082\3\2\2\2\30\u0084\3\2\2\2\32\u008d\3")
-        buf.write("\2\2\2\34\u0091\3\2\2\2\36\u0097\3\2\2\2 \u009a\3\2\2")
-        buf.write("\2\"\u00aa\3\2\2\2$\u00b1\3\2\2\2&\u00bb\3\2\2\2(*\5\4")
-        buf.write("\3\2)(\3\2\2\2*+\3\2\2\2+)\3\2\2\2+,\3\2\2\2,-\3\2\2\2")
-        buf.write("-.\7\2\2\3.\3\3\2\2\2/\63\7\31\2\2\60\62\7\32\2\2\61\60")
-        buf.write("\3\2\2\2\62\65\3\2\2\2\63\61\3\2\2\2\63\64\3\2\2\2\64")
-        buf.write("\66\3\2\2\2\65\63\3\2\2\2\66\67\7\16\2\2\678\5\6\4\28")
-        buf.write("9\7\17\2\29\5\3\2\2\2:<\5\b\5\2;:\3\2\2\2<?\3\2\2\2=;")
-        buf.write("\3\2\2\2=>\3\2\2\2>\7\3\2\2\2?=\3\2\2\2@I\5\n\6\2AI\5")
-        buf.write("\20\t\2BI\5\22\n\2CI\5\24\13\2DI\5\26\f\2EI\5\"\22\2F")
-        buf.write("I\5\f\7\2GI\5\16\b\2H@\3\2\2\2HA\3\2\2\2HB\3\2\2\2HC\3")
-        buf.write("\2\2\2HD\3\2\2\2HE\3\2\2\2HF\3\2\2\2HG\3\2\2\2IO\3\2\2")
-        buf.write("\2JM\5&\24\2KM\5$\23\2LJ\3\2\2\2LK\3\2\2\2MO\3\2\2\2N")
-        buf.write("H\3\2\2\2NL\3\2\2\2O\t\3\2\2\2PT\7\31\2\2QS\5&\24\2RQ")
-        buf.write("\3\2\2\2SV\3\2\2\2TR\3\2\2\2TU\3\2\2\2U\13\3\2\2\2VT\3")
-        buf.write("\2\2\2WX\7\6\2\2XY\7\32\2\2Y\r\3\2\2\2Za\7\7\2\2[`\5 ")
-        buf.write("\21\2\\`\5\36\20\2]`\5&\24\2^`\7&\2\2_[\3\2\2\2_\\\3\2")
-        buf.write("\2\2_]\3\2\2\2_^\3\2\2\2`c\3\2\2\2a_\3\2\2\2ab\3\2\2\2")
-        buf.write("b\17\3\2\2\2ca\3\2\2\2de\7\32\2\2ef\7\5\2\2fk\5&\24\2")
-        buf.write("gh\7\32\2\2hi\7\5\2\2ik\5\30\r\2jd\3\2\2\2jg\3\2\2\2k")
-        buf.write("\21\3\2\2\2lm\7\24\2\2mn\5$\23\2no\7\16\2\2op\5\6\4\2")
-        buf.write("pv\7\17\2\2qr\7\26\2\2rs\7\16\2\2st\5\6\4\2tu\7\17\2\2")
-        buf.write("uw\3\2\2\2vq\3\2\2\2vw\3\2\2\2w\23\3\2\2\2xy\7\25\2\2")
-        buf.write("yz\5$\23\2z{\7\16\2\2{|\5\6\4\2|}\7\17\2\2}\25\3\2\2\2")
-        buf.write("~\u0083\5\32\16\2\177\u0083\5\34\17\2\u0080\u0083\5 \21")
-        buf.write("\2\u0081\u0083\5\36\20\2\u0082~\3\2\2\2\u0082\177\3\2")
-        buf.write("\2\2\u0082\u0080\3\2\2\2\u0082\u0081\3\2\2\2\u0083\27")
-        buf.write("\3\2\2\2\u0084\u0088\7\3\2\2\u0085\u0087\t\2\2\2\u0086")
-        buf.write("\u0085\3\2\2\2\u0087\u008a\3\2\2\2\u0088\u0086\3\2\2\2")
-        buf.write("\u0088\u0089\3\2\2\2\u0089\u008b\3\2\2\2\u008a\u0088\3")
-        buf.write("\2\2\2\u008b\u008c\7\4\2\2\u008c\31\3\2\2\2\u008d\u008e")
-        buf.write("\7\32\2\2\u008e\u008f\7\35\2\2\u008f\u0090\5&\24\2\u0090")
-        buf.write("\33\3\2\2\2\u0091\u0092\7\36\2\2\u0092\u0093\7\32\2\2")
-        buf.write("\u0093\u0094\7\20\2\2\u0094\u0095\5&\24\2\u0095\u0096")
-        buf.write("\7\21\2\2\u0096\35\3\2\2\2\u0097\u0098\7\37\2\2\u0098")
-        buf.write("\u0099\7\32\2\2\u0099\37\3\2\2\2\u009a\u009b\7\32\2\2")
-        buf.write("\u009b\u009c\7\20\2\2\u009c\u009d\5&\24\2\u009d\u009e")
-        buf.write("\7\21\2\2\u009e!\3\2\2\2\u009f\u00a0\7\33\2\2\u00a0\u00a2")
-        buf.write("\7\3\2\2\u00a1\u00a3\5&\24\2\u00a2\u00a1\3\2\2\2\u00a3")
-        buf.write("\u00a4\3\2\2\2\u00a4\u00a2\3\2\2\2\u00a4\u00a5\3\2\2\2")
-        buf.write("\u00a5\u00a6\3\2\2\2\u00a6\u00a7\7\4\2\2\u00a7\u00ab\3")
-        buf.write("\2\2\2\u00a8\u00a9\7\33\2\2\u00a9\u00ab\7\32\2\2\u00aa")
-        buf.write("\u009f\3\2\2\2\u00aa\u00a8\3\2\2\2\u00ab#\3\2\2\2\u00ac")
-        buf.write("\u00ad\5&\24\2\u00ad\u00ae\t\3\2\2\u00ae\u00af\5&\24\2")
-        buf.write("\u00af\u00b2\3\2\2\2\u00b0\u00b2\7\27\2\2\u00b1\u00ac")
-        buf.write("\3\2\2\2\u00b1\u00b0\3\2\2\2\u00b2%\3\2\2\2\u00b3\u00b4")
-        buf.write("\b\24\1\2\u00b4\u00b5\7\22\2\2\u00b5\u00b6\5&\24\2\u00b6")
-        buf.write("\u00b7\7\23\2\2\u00b7\u00bc\3\2\2\2\u00b8\u00bc\7\34\2")
-        buf.write("\2\u00b9\u00bc\7\27\2\2\u00ba\u00bc\7\32\2\2\u00bb\u00b3")
-        buf.write("\3\2\2\2\u00bb\u00b8\3\2\2\2\u00bb\u00b9\3\2\2\2\u00bb")
-        buf.write("\u00ba\3\2\2\2\u00bc\u00c5\3\2\2\2\u00bd\u00be\f\7\2\2")
-        buf.write("\u00be\u00bf\t\4\2\2\u00bf\u00c4\5&\24\b\u00c0\u00c1\f")
-        buf.write("\6\2\2\u00c1\u00c2\t\5\2\2\u00c2\u00c4\5&\24\7\u00c3\u00bd")
-        buf.write("\3\2\2\2\u00c3\u00c0\3\2\2\2\u00c4\u00c7\3\2\2\2\u00c5")
-        buf.write("\u00c3\3\2\2\2\u00c5\u00c6\3\2\2\2\u00c6\'\3\2\2\2\u00c7")
-        buf.write("\u00c5\3\2\2\2\25+\63=HLNT_ajv\u0082\u0088\u00a4\u00aa")
-        buf.write("\u00b1\u00bb\u00c3\u00c5")
+        buf.write("\3\16\3\17\3\17\3\17\3\17\5\17\u0096\n\17\3\17\3\17\3")
+        buf.write("\20\3\20\3\20\3\21\3\21\3\21\3\21\5\21\u00a1\n\21\3\21")
+        buf.write("\3\21\3\22\3\22\3\22\6\22\u00a8\n\22\r\22\16\22\u00a9")
+        buf.write("\3\22\3\22\3\22\3\22\5\22\u00b0\n\22\3\23\3\23\3\23\3")
+        buf.write("\23\3\23\5\23\u00b7\n\23\3\24\3\24\3\24\3\24\3\24\3\24")
+        buf.write("\3\24\3\24\5\24\u00c1\n\24\3\24\3\24\3\24\3\24\3\24\3")
+        buf.write("\24\7\24\u00c9\n\24\f\24\16\24\u00cc\13\24\3\24\2\3&\25")
+        buf.write("\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&\2\6\4\2\27")
+        buf.write("\27\34\34\3\2\b\r\3\2#%\3\2!\"\2\u00db\2)\3\2\2\2\4/\3")
+        buf.write("\2\2\2\6=\3\2\2\2\bN\3\2\2\2\nP\3\2\2\2\fW\3\2\2\2\16")
+        buf.write("Z\3\2\2\2\20j\3\2\2\2\22l\3\2\2\2\24x\3\2\2\2\26\u0082")
+        buf.write("\3\2\2\2\30\u0084\3\2\2\2\32\u008d\3\2\2\2\34\u0091\3")
+        buf.write("\2\2\2\36\u0099\3\2\2\2 \u009c\3\2\2\2\"\u00af\3\2\2\2")
+        buf.write("$\u00b6\3\2\2\2&\u00c0\3\2\2\2(*\5\4\3\2)(\3\2\2\2*+\3")
+        buf.write("\2\2\2+)\3\2\2\2+,\3\2\2\2,-\3\2\2\2-.\7\2\2\3.\3\3\2")
+        buf.write("\2\2/\63\7\31\2\2\60\62\7\32\2\2\61\60\3\2\2\2\62\65\3")
+        buf.write("\2\2\2\63\61\3\2\2\2\63\64\3\2\2\2\64\66\3\2\2\2\65\63")
+        buf.write("\3\2\2\2\66\67\7\16\2\2\678\5\6\4\289\7\17\2\29\5\3\2")
+        buf.write("\2\2:<\5\b\5\2;:\3\2\2\2<?\3\2\2\2=;\3\2\2\2=>\3\2\2\2")
+        buf.write(">\7\3\2\2\2?=\3\2\2\2@I\5\n\6\2AI\5\20\t\2BI\5\22\n\2")
+        buf.write("CI\5\24\13\2DI\5\26\f\2EI\5\"\22\2FI\5\f\7\2GI\5\16\b")
+        buf.write("\2H@\3\2\2\2HA\3\2\2\2HB\3\2\2\2HC\3\2\2\2HD\3\2\2\2H")
+        buf.write("E\3\2\2\2HF\3\2\2\2HG\3\2\2\2IO\3\2\2\2JM\5&\24\2KM\5")
+        buf.write("$\23\2LJ\3\2\2\2LK\3\2\2\2MO\3\2\2\2NH\3\2\2\2NL\3\2\2")
+        buf.write("\2O\t\3\2\2\2PT\7\31\2\2QS\5&\24\2RQ\3\2\2\2SV\3\2\2\2")
+        buf.write("TR\3\2\2\2TU\3\2\2\2U\13\3\2\2\2VT\3\2\2\2WX\7\6\2\2X")
+        buf.write("Y\7\32\2\2Y\r\3\2\2\2Za\7\7\2\2[`\5 \21\2\\`\5\36\20\2")
+        buf.write("]`\5&\24\2^`\7&\2\2_[\3\2\2\2_\\\3\2\2\2_]\3\2\2\2_^\3")
+        buf.write("\2\2\2`c\3\2\2\2a_\3\2\2\2ab\3\2\2\2b\17\3\2\2\2ca\3\2")
+        buf.write("\2\2de\7\32\2\2ef\7\5\2\2fk\5&\24\2gh\7\32\2\2hi\7\5\2")
+        buf.write("\2ik\5\30\r\2jd\3\2\2\2jg\3\2\2\2k\21\3\2\2\2lm\7\24\2")
+        buf.write("\2mn\5$\23\2no\7\16\2\2op\5\6\4\2pv\7\17\2\2qr\7\26\2")
+        buf.write("\2rs\7\16\2\2st\5\6\4\2tu\7\17\2\2uw\3\2\2\2vq\3\2\2\2")
+        buf.write("vw\3\2\2\2w\23\3\2\2\2xy\7\25\2\2yz\5$\23\2z{\7\16\2\2")
+        buf.write("{|\5\6\4\2|}\7\17\2\2}\25\3\2\2\2~\u0083\5\32\16\2\177")
+        buf.write("\u0083\5\34\17\2\u0080\u0083\5 \21\2\u0081\u0083\5\36")
+        buf.write("\20\2\u0082~\3\2\2\2\u0082\177\3\2\2\2\u0082\u0080\3\2")
+        buf.write("\2\2\u0082\u0081\3\2\2\2\u0083\27\3\2\2\2\u0084\u0088")
+        buf.write("\7\3\2\2\u0085\u0087\t\2\2\2\u0086\u0085\3\2\2\2\u0087")
+        buf.write("\u008a\3\2\2\2\u0088\u0086\3\2\2\2\u0088\u0089\3\2\2\2")
+        buf.write("\u0089\u008b\3\2\2\2\u008a\u0088\3\2\2\2\u008b\u008c\7")
+        buf.write("\4\2\2\u008c\31\3\2\2\2\u008d\u008e\7\32\2\2\u008e\u008f")
+        buf.write("\7\35\2\2\u008f\u0090\5&\24\2\u0090\33\3\2\2\2\u0091\u0092")
+        buf.write("\7\36\2\2\u0092\u0095\7\20\2\2\u0093\u0096\5\36\20\2\u0094")
+        buf.write("\u0096\5&\24\2\u0095\u0093\3\2\2\2\u0095\u0094\3\2\2\2")
+        buf.write("\u0096\u0097\3\2\2\2\u0097\u0098\7\21\2\2\u0098\35\3\2")
+        buf.write("\2\2\u0099\u009a\7\37\2\2\u009a\u009b\7\32\2\2\u009b\37")
+        buf.write("\3\2\2\2\u009c\u009d\7\32\2\2\u009d\u00a0\7\20\2\2\u009e")
+        buf.write("\u00a1\5&\24\2\u009f\u00a1\5\36\20\2\u00a0\u009e\3\2\2")
+        buf.write("\2\u00a0\u009f\3\2\2\2\u00a1\u00a2\3\2\2\2\u00a2\u00a3")
+        buf.write("\7\21\2\2\u00a3!\3\2\2\2\u00a4\u00a5\7\33\2\2\u00a5\u00a7")
+        buf.write("\7\3\2\2\u00a6\u00a8\5&\24\2\u00a7\u00a6\3\2\2\2\u00a8")
+        buf.write("\u00a9\3\2\2\2\u00a9\u00a7\3\2\2\2\u00a9\u00aa\3\2\2\2")
+        buf.write("\u00aa\u00ab\3\2\2\2\u00ab\u00ac\7\4\2\2\u00ac\u00b0\3")
+        buf.write("\2\2\2\u00ad\u00ae\7\33\2\2\u00ae\u00b0\7\32\2\2\u00af")
+        buf.write("\u00a4\3\2\2\2\u00af\u00ad\3\2\2\2\u00b0#\3\2\2\2\u00b1")
+        buf.write("\u00b2\5&\24\2\u00b2\u00b3\t\3\2\2\u00b3\u00b4\5&\24\2")
+        buf.write("\u00b4\u00b7\3\2\2\2\u00b5\u00b7\7\27\2\2\u00b6\u00b1")
+        buf.write("\3\2\2\2\u00b6\u00b5\3\2\2\2\u00b7%\3\2\2\2\u00b8\u00b9")
+        buf.write("\b\24\1\2\u00b9\u00ba\7\22\2\2\u00ba\u00bb\5&\24\2\u00bb")
+        buf.write("\u00bc\7\23\2\2\u00bc\u00c1\3\2\2\2\u00bd\u00c1\7\34\2")
+        buf.write("\2\u00be\u00c1\7\27\2\2\u00bf\u00c1\7\32\2\2\u00c0\u00b8")
+        buf.write("\3\2\2\2\u00c0\u00bd\3\2\2\2\u00c0\u00be\3\2\2\2\u00c0")
+        buf.write("\u00bf\3\2\2\2\u00c1\u00ca\3\2\2\2\u00c2\u00c3\f\7\2\2")
+        buf.write("\u00c3\u00c4\t\4\2\2\u00c4\u00c9\5&\24\b\u00c5\u00c6\f")
+        buf.write("\6\2\2\u00c6\u00c7\t\5\2\2\u00c7\u00c9\5&\24\7\u00c8\u00c2")
+        buf.write("\3\2\2\2\u00c8\u00c5\3\2\2\2\u00c9\u00cc\3\2\2\2\u00ca")
+        buf.write("\u00c8\3\2\2\2\u00ca\u00cb\3\2\2\2\u00cb\'\3\2\2\2\u00cc")
+        buf.write("\u00ca\3\2\2\2\27+\63=HLNT_ajv\u0082\u0088\u0095\u00a0")
+        buf.write("\u00a9\u00af\u00b6\u00c0\u00c8\u00ca")
         return buf.getvalue()
 
 
@@ -1112,14 +1115,15 @@ class jsbachParser ( Parser ):
         def LIST_CUT(self):
             return self.getToken(jsbachParser.LIST_CUT, 0)
 
-        def ID(self):
-            return self.getToken(jsbachParser.ID, 0)
-
         def L_KEY(self):
             return self.getToken(jsbachParser.L_KEY, 0)
 
         def R_KEY(self):
             return self.getToken(jsbachParser.R_KEY, 0)
+
+        def listSize(self):
+            return self.getTypedRuleContext(jsbachParser.ListSizeContext,0)
+
 
         def expr(self):
             return self.getTypedRuleContext(jsbachParser.ExprContext,0)
@@ -1146,13 +1150,22 @@ class jsbachParser ( Parser ):
             self.state = 143
             self.match(jsbachParser.LIST_CUT)
             self.state = 144
-            self.match(jsbachParser.ID)
-            self.state = 145
             self.match(jsbachParser.L_KEY)
-
-            self.state = 146
-            self.expr(0)
             self.state = 147
+            self._errHandler.sync(self)
+            token = self._input.LA(1)
+            if token in [jsbachParser.LIST_SIZE]:
+                self.state = 145
+                self.listSize()
+                pass
+            elif token in [jsbachParser.LPAR, jsbachParser.NUM, jsbachParser.ID, jsbachParser.NOTE]:
+                self.state = 146
+                self.expr(0)
+                pass
+            else:
+                raise NoViableAltException(self)
+
+            self.state = 149
             self.match(jsbachParser.R_KEY)
         except RecognitionException as re:
             localctx.exception = re
@@ -1192,9 +1205,9 @@ class jsbachParser ( Parser ):
         self.enterRule(localctx, 28, self.RULE_listSize)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 149
+            self.state = 151
             self.match(jsbachParser.LIST_SIZE)
-            self.state = 150
+            self.state = 152
             self.match(jsbachParser.ID)
         except RecognitionException as re:
             localctx.exception = re
@@ -1223,6 +1236,10 @@ class jsbachParser ( Parser ):
             return self.getTypedRuleContext(jsbachParser.ExprContext,0)
 
 
+        def listSize(self):
+            return self.getTypedRuleContext(jsbachParser.ListSizeContext,0)
+
+
         def getRuleIndex(self):
             return jsbachParser.RULE_listGet
 
@@ -1241,14 +1258,25 @@ class jsbachParser ( Parser ):
         self.enterRule(localctx, 30, self.RULE_listGet)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 152
-            self.match(jsbachParser.ID)
-            self.state = 153
-            self.match(jsbachParser.L_KEY)
-
             self.state = 154
-            self.expr(0)
+            self.match(jsbachParser.ID)
             self.state = 155
+            self.match(jsbachParser.L_KEY)
+            self.state = 158
+            self._errHandler.sync(self)
+            token = self._input.LA(1)
+            if token in [jsbachParser.LPAR, jsbachParser.NUM, jsbachParser.ID, jsbachParser.NOTE]:
+                self.state = 156
+                self.expr(0)
+                pass
+            elif token in [jsbachParser.LIST_SIZE]:
+                self.state = 157
+                self.listSize()
+                pass
+            else:
+                raise NoViableAltException(self)
+
+            self.state = 160
             self.match(jsbachParser.R_KEY)
         except RecognitionException as re:
             localctx.exception = re
@@ -1295,37 +1323,37 @@ class jsbachParser ( Parser ):
         self.enterRule(localctx, 32, self.RULE_playStmt)
         self._la = 0 # Token type
         try:
-            self.state = 168
+            self.state = 173
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,14,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,16,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 157
+                self.state = 162
                 self.match(jsbachParser.PLAY)
-                self.state = 158
+                self.state = 163
                 self.match(jsbachParser.T__0)
 
-                self.state = 160 
+                self.state = 165 
                 self._errHandler.sync(self)
                 _la = self._input.LA(1)
                 while True:
-                    self.state = 159
+                    self.state = 164
                     self.expr(0)
-                    self.state = 162 
+                    self.state = 167 
                     self._errHandler.sync(self)
                     _la = self._input.LA(1)
                     if not ((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << jsbachParser.LPAR) | (1 << jsbachParser.NUM) | (1 << jsbachParser.ID) | (1 << jsbachParser.NOTE))) != 0)):
                         break
 
-                self.state = 164
+                self.state = 169
                 self.match(jsbachParser.T__1)
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 166
+                self.state = 171
                 self.match(jsbachParser.PLAY)
-                self.state = 167
+                self.state = 172
                 self.match(jsbachParser.ID)
                 pass
 
@@ -1390,14 +1418,14 @@ class jsbachParser ( Parser ):
         self.enterRule(localctx, 34, self.RULE_relExp)
         self._la = 0 # Token type
         try:
-            self.state = 175
+            self.state = 180
             self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,15,self._ctx)
+            la_ = self._interp.adaptivePredict(self._input,17,self._ctx)
             if la_ == 1:
                 self.enterOuterAlt(localctx, 1)
-                self.state = 170
+                self.state = 175
                 self.expr(0)
-                self.state = 171
+                self.state = 176
                 _la = self._input.LA(1)
                 if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << jsbachParser.EQ) | (1 << jsbachParser.DIF) | (1 << jsbachParser.LST) | (1 << jsbachParser.GRT) | (1 << jsbachParser.GREQ) | (1 << jsbachParser.LSEQ))) != 0)):
                     self._errHandler.recoverInline(self)
@@ -1405,13 +1433,13 @@ class jsbachParser ( Parser ):
                     self._errHandler.reportMatch(self)
                     self.consume()
 
-                self.state = 172
+                self.state = 177
                 self.expr(0)
                 pass
 
             elif la_ == 2:
                 self.enterOuterAlt(localctx, 2)
-                self.state = 174
+                self.state = 179
                 self.match(jsbachParser.NUM)
                 pass
 
@@ -1569,7 +1597,7 @@ class jsbachParser ( Parser ):
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 185
+            self.state = 190
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [jsbachParser.LPAR]:
@@ -1577,89 +1605,89 @@ class jsbachParser ( Parser ):
                 self._ctx = localctx
                 _prevctx = localctx
 
-                self.state = 178
+                self.state = 183
                 self.match(jsbachParser.LPAR)
-                self.state = 179
+                self.state = 184
                 self.expr(0)
-                self.state = 180
+                self.state = 185
                 self.match(jsbachParser.RPAR)
                 pass
             elif token in [jsbachParser.NOTE]:
                 localctx = jsbachParser.NoteContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 182
+                self.state = 187
                 self.match(jsbachParser.NOTE)
                 pass
             elif token in [jsbachParser.NUM]:
                 localctx = jsbachParser.NumContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 183
+                self.state = 188
                 self.match(jsbachParser.NUM)
                 pass
             elif token in [jsbachParser.ID]:
                 localctx = jsbachParser.VarIdContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
-                self.state = 184
+                self.state = 189
                 self.match(jsbachParser.ID)
                 pass
             else:
                 raise NoViableAltException(self)
 
             self._ctx.stop = self._input.LT(-1)
-            self.state = 195
+            self.state = 200
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,18,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,20,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
-                    self.state = 193
+                    self.state = 198
                     self._errHandler.sync(self)
-                    la_ = self._interp.adaptivePredict(self._input,17,self._ctx)
+                    la_ = self._interp.adaptivePredict(self._input,19,self._ctx)
                     if la_ == 1:
                         localctx = jsbachParser.DivMulModContext(self, jsbachParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 187
+                        self.state = 192
                         if not self.precpred(self._ctx, 5):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 5)")
-                        self.state = 188
+                        self.state = 193
                         _la = self._input.LA(1)
                         if not((((_la) & ~0x3f) == 0 and ((1 << _la) & ((1 << jsbachParser.MUL) | (1 << jsbachParser.DIV) | (1 << jsbachParser.MOD))) != 0)):
                             self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
-                        self.state = 189
+                        self.state = 194
                         self.expr(6)
                         pass
 
                     elif la_ == 2:
                         localctx = jsbachParser.AddSubContext(self, jsbachParser.ExprContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_expr)
-                        self.state = 190
+                        self.state = 195
                         if not self.precpred(self._ctx, 4):
                             from antlr4.error.Errors import FailedPredicateException
                             raise FailedPredicateException(self, "self.precpred(self._ctx, 4)")
-                        self.state = 191
+                        self.state = 196
                         _la = self._input.LA(1)
                         if not(_la==jsbachParser.ADD or _la==jsbachParser.SUB):
                             self._errHandler.recoverInline(self)
                         else:
                             self._errHandler.reportMatch(self)
                             self.consume()
-                        self.state = 192
+                        self.state = 197
                         self.expr(5)
                         pass
 
              
-                self.state = 197
+                self.state = 202
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,18,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,20,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re

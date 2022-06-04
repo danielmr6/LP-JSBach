@@ -6,6 +6,8 @@ Hanoi |:
     x <- A
     src << x
     <!> src
+    8< src[0]
+    <!> src
 :|
 
 

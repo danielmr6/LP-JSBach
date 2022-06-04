@@ -101,11 +101,11 @@ listConst : '{' (NUM | NOTE )* '}' ;
 
 listAddStmt: ID LIST_ADD (expr) ;
 
-listCutStmt: LIST_CUT ID L_KEY (expr) R_KEY ;
+listCutStmt: LIST_CUT L_KEY (listSize | expr) R_KEY;
 
 listSize: LIST_SIZE ID ;
 
-listGet : ID L_KEY (expr) R_KEY ; 
+listGet : ID L_KEY (expr | listSize) R_KEY ; 
 
 
 /****************NOTES****************/

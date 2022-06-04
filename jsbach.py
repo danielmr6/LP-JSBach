@@ -175,8 +175,13 @@ class EvalVisitor(jsbachVisitor):
         res = ''
         for child in range(1,n):
             valor = self.visit(l[child])
-            if valor:
-                res += ' ' + str(valor)       
+            esEnter = isinstance(valor, int)
+            esNota = isinstance(valor, str)
+            if esEnter:
+                if valor >= 0:
+                    res += ' ' + str(valor)       
+            elif esNota:
+                res += ' ' +  valor
             else:
                 res += ' ' + l[child].getText()[1:-1]
         print(res)
@@ -212,8 +217,9 @@ class EvalVisitor(jsbachVisitor):
         l = list(ctx.getChildren())
         n = len(l)
         valorsAux = []
-        for i in range(1, n-1):
-            valorsAux.append(l[i].getText())
+        if n >= 1:
+            for i in range(1, n-1):
+                valorsAux.append(l[i].getText())
         return valorsAux
 
     def visitListAddStmt(self, ctx):
@@ -251,8 +257,10 @@ class EvalVisitor(jsbachVisitor):
     def visitListSize(self, ctx):
         l = list(ctx.getChildren())
         nomllista = l[1].getText()
-        llistaAux = self.stack.getValue()['ts'][nomllista]
-        return len(llistaAux)
+        if self.stack.existsInTs(nomllista):
+            return len(self.stack.getValue()['ts'][nomllista])
+        else:
+            raise Exception('No existeix cap llista amb el nom ' + nomllista)
         
     def visitListGet(self, ctx):
         l = list(ctx.getChildren())
@@ -279,7 +287,13 @@ class EvalVisitor(jsbachVisitor):
             while i < n and l[i].getText() != '}':
                 self.partitura.append(l[i].getText())
                 i += 1
-        print(self.partitura)
+        else:
+            nomll = l[1].getText()
+            if self.stack.existsInTs(nomll):
+                llistaNotes = self.stack.getValue()['ts'][nomll]
+                self.partitura.append(llistaNotes)
+            else:
+                raise Exception('No existeix la llista amb nom' + nomll)
 
     def visitRelExp(self, ctx):
         l = list(ctx.getChildren())
@@ -324,7 +338,7 @@ class EvalVisitor(jsbachVisitor):
         return self.visit(l[1])
 
     def visitVarId(self, ctx):
-        if ctx.getText() in self.stack.getValue()['ts'].keys():
+        if self.stack.existsInTs(ctx.getText()):
             return self.stack.getValue()['ts'][ctx.getText()]
         else:
             raise Exception('La variable ' + ctx.getText() +
@@ -381,7 +395,8 @@ def main():
     print(tree.toStringTree(recog=parser))
 
     notes = visitor.visit(tree)
-    ''' fitxerBase = open('generador.lily', 'r')
+
+    fitxerBase = open('generador.lily', 'r')
     inici = ''
     for linea in fitxerBase:
         inici = inici + '\n' + linea
@@ -407,6 +422,6 @@ def main():
     remove(nomPrograma + '.lily')
     remove(nomPrograma + '.midi')
     remove(nomPrograma + '.wav')
-    '''
+    
 if __name__ == '__main__':
     main()

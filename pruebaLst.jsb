@@ -2,12 +2,16 @@
 
 Hanoi |:
     src <- {C D E F G}
-    <!> src[1]
-    x <- A
-    src << x
-    <!> src
-    8< src[0]
-    <!> src
+    dst <- {}
+    aux <- {}
+    <!> #src
+    <!> #dst 
+    <!> #aux
+    <!> "L'ultim element es" src[5]
+    <!> "Esborrem" src[5]
+    8< src[5]
+    <!> "Ara l'ultim element es" src[4]
+  
 :|
 
 

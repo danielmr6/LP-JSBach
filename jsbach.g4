@@ -40,7 +40,7 @@ La crida a una funció ve determinada pel nom de la funció, el qual ha de comen
 la distinció entre el nom d'una funció i una variable del codi. Seguidament, es poden donar 0 o més expressions, les quals 
 conformen els possibles paràmetres de la funció corresponent.
 */
-callFunc : FNC_NAME (expr)* ;
+callFunc : FNC_NAME (expr | listSize | listGet)* ;
 
 
 
@@ -59,7 +59,7 @@ La gramàtica d'escriptura d'un valor ve definida pel token d'escriptura, seguit
 o una expressió. Una cadena està formada per les cometes '"', després tota la informació que es vulgui donar excepte: \n, \r i |t, 
 i per finalitzar les cometes '"' que tanquen la cadena.
 */
-writeStmt : WRITE (listGet | listSize |expr | CADENA)* ; 
+writeStmt : WRITE (listGet | listSize | expr | CADENA)* ; 
 
 
 /*****************ASSIGNACIÓ****************/
@@ -68,7 +68,7 @@ Una assignació està formada pel primer token que es un ID, la variable on es g
 l'expressió, que conté el valor el qual es vol guardar.
 */
 assigs : ID ASSIG expr 
-    | ID ASSIG listConst 
+    | ID ASSIG (listConst | listGet | listSize)
     ;
 
 /****************CONDICIONAL****************/
@@ -101,7 +101,7 @@ listConst : '{' (NUM | NOTE )* '}' ;
 
 listAddStmt: ID LIST_ADD (expr) ;
 
-listCutStmt: LIST_CUT L_KEY (listSize | expr) R_KEY;
+listCutStmt: LIST_CUT ID L_KEY (listSize | expr) R_KEY;
 
 listSize: LIST_SIZE ID ;
 
@@ -169,7 +169,7 @@ ELSE : 'else' ;
 /*****************Definicions elementals*****************/
 NUM  : (DIGIT)+ ;
 DIGIT   : ('0'..'9') ;
-FNC_NAME : [A-Z][a-z]+ ;
+FNC_NAME : [A-Z][a-zA-Z]+;
 ID  : [a-z][a-zA-Z]* ;
 
 /*****************Notes*****************/

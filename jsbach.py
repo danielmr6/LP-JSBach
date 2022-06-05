@@ -16,14 +16,20 @@ else:
 
 class Notes:
     def __init__(self):
-        self.__notes = { 'AO' : 1 , 'B0' : 2, 'C1' : 3 ,
-            
-            
-            
-            
-            
-        }
+        self.__notes = { 'AO' : 1 , 'B0' : 2, 
+                        'C1' : 3 , 'D1' : 4, 'E1' : 5, 'F1' : 6, 'G1' : 7, 'A1': 8, 'B1' : 9,
+                        'C2' : 10 , 'D2' : 11, 'E2' : 12, 'F2' : 13, 'G2' : 14, 'A2': 15, 'B2' : 16,
+                        'C3' : 17 , 'D3' : 18, 'E3' : 19, 'F3' : 20, 'G3' : 21, 'A3': 22, 'B3' : 23,
+                        'C4' : 24 , 'D4' : 25, 'E4' : 26, 'F4' : 27, 'G4' : 28, 'A4': 29, 'B4' : 30,
+                        'C5' : 31 , 'D5' : 32, 'E5' : 33, 'F5' : 34, 'G5' : 35, 'A5': 36, 'B5' : 37,
+                        'C6' : 38 , 'D6' : 41, 'E6' : 40, 'F6' : 41, 'G6' : 42, 'A6': 43, 'B6' : 44,
+                        'C7' : 45 , 'D7' : 46, 'E7' : 47, 'F7' : 48, 'G7' : 49, 'A7': 50, 'B7' : 51,
+                        'C8' : 52 }
 
+        self.__notesO4 = {'C' : 24 , 'D' : 25, 'E' : 26, 'F' : 27, 'G' : 28, 'A': 29, 'B' : 30}
+
+    def isNoteValid(self, note:str):
+        return (note in self.__notes.keys() or note in self.__notesO4.keys())
 
 class Heap:
     
@@ -38,7 +44,7 @@ class Heap:
     def existsInTs(self, word:str):
         return (word in self.__stack[0]['ts'].keys())
 
-    def getValue(self):
+    def getInfoFunc(self):
         return self.__stack[0]
         
     def removeTop(self):
@@ -69,25 +75,32 @@ class EvalVisitor(jsbachVisitor):
         else:
             self.nomFuncioInicial = 'Main'
             self.parametresIni = []
-
+        '''
+        dadesFunc = 
+        { 
+        'Main' : { 
+                   'nom' = Main
+                   'parametres' : llista amb els noms dels paràmetres, 
+                   'codi' : bloc de codi,
+                   'ts' : { 'nomVariable' : valor , ...}
+                }
+        ...
+        }
+        Fem un diccionari tenint com a clau el nom de la funcio i com a valor un altre diccionari més intern 
+        que conté com a clau el camp 'nom', amb el seu respectiu nom de la funció, el camp 'parametres', on es 
+        guarden els diferents noms, el camp 'codi' on es guarda la referència per visitar el codi de la funció 
+        i el camp 'ts', el qual guarda tota la informació relacionada amb les variables, els paràmetres i els 
+        seus valors corresponents.
+        '''
         self.dadesFunc = {}
+        
+        '''
+        La partitura que es genera al final de l'execució del programa és una llista que conté totes les notes 
+        musicals vàlides que s'afegeixin al llarg de tot el codi.
+        '''
         self.partitura = []
 
-    '''
-    dadesFunc = 
-    { 
-    'Main' : { 
-               'nom' = Main
-               'parametres' : llista amb els noms dels paràmetres, 
-               'codi' : bloc de codi,
-                'ts' : { 'nomVariable' : valor , ...}
-            }
-    }
-    Fem un diccionari tenint com a clau el nom de la funcio i com a valor un altre diccionari més intern 
-    que conté com a clau el camp 'nom', amb el seu respectiu nom de la funció, el camp 'parametres', on es 
-    guarden els diferents noms, el camp 'codi' on es guarda la referència per visitar el codi de la funció 
-    i el camp 'ts', el qual guarda tota la informació relacionada amb les variables i els paràmetres.
-    '''
+  
     def visitRoot(self, ctx):
         l = list(ctx.getChildren())
         n = len(l)
@@ -166,7 +179,7 @@ class EvalVisitor(jsbachVisitor):
         l = list(ctx.getChildren())
         info = input()
         key = l[1].getText()
-        self.stack.getValue()['ts'][key] = int(info)
+        self.stack.getInfoFunc()['ts'][key] = int(info)
         
 
     def visitWriteStmt(self, ctx):
@@ -177,11 +190,23 @@ class EvalVisitor(jsbachVisitor):
             valor = self.visit(l[child])
             esEnter = isinstance(valor, int)
             esNota = isinstance(valor, str)
+            esLlista = isinstance(valor, list)
             if esEnter:
                 if valor >= 0:
                     res += ' ' + str(valor)       
+                    
             elif esNota:
                 res += ' ' +  valor
+                
+            elif esLlista:
+                res += ' ' + '['
+                n = len(valor)
+                for i in range(0,n):
+                    if i == n-1:
+                        res += valor[i]
+                    else:
+                        res += valor[i] + ','
+                res += ']'
             else:
                 res += ' ' + l[child].getText()[1:-1]
         print(res)
@@ -202,7 +227,7 @@ class EvalVisitor(jsbachVisitor):
             value = self.visitListConst(l[2])
         else:
             value = self.visit(l[2])
-        self.stack.getValue()['ts'][key] = value
+        self.stack.getInfoFunc()['ts'][key] = value
         return value
 
     def visitSentenceWhile(self, ctx):
@@ -226,10 +251,10 @@ class EvalVisitor(jsbachVisitor):
         l = list(ctx.getChildren())
         noml = l[0].getText()
         element = self.visit(l[2])
-        if noml in self.stack.getValue()['ts'].keys():
-            llista = self.stack.getValue()['ts'][noml]
+        if noml in self.stack.getInfoFunc()['ts'].keys():
+            llista = self.stack.getInfoFunc()['ts'][noml]
             llista.append(element)
-            self.stack.getValue()['ts'][noml] = llista
+            self.stack.getInfoFunc()['ts'][noml] = llista
         else:
             raise Exception('No existeix cap llista amb el nom ' + noml)  
             
@@ -241,10 +266,10 @@ class EvalVisitor(jsbachVisitor):
         if index >= 0:
             nomllista = l[1].getText()
             if self.stack.existsInTs(nomllista):
-                llista = self.stack.getValue()['ts'][nomllista]
+                llista = self.stack.getInfoFunc()['ts'][nomllista]
                 if len(llista) >= 1 and index <= (len(llista)-1):
                     llista.pop(index)
-                    self.stack.getValue()['ts'][nomllista] = llista
+                    self.stack.getInfoFunc()['ts'][nomllista] = llista
                 else:
                     raise Exception('No existeix el element i-èsim a la llista')
             else:
@@ -258,7 +283,7 @@ class EvalVisitor(jsbachVisitor):
         l = list(ctx.getChildren())
         nomllista = l[1].getText()
         if self.stack.existsInTs(nomllista):
-            return len(self.stack.getValue()['ts'][nomllista])
+            return len(self.stack.getInfoFunc()['ts'][nomllista])
         else:
             raise Exception('No existeix cap llista amb el nom ' + nomllista)
         
@@ -268,7 +293,7 @@ class EvalVisitor(jsbachVisitor):
         if index >= 0:
             noml = l[0].getText()
             if self.stack.existsInTs(noml):
-                llista = self.stack.getValue()['ts'][noml]
+                llista = self.stack.getInfoFunc()['ts'][noml]
                 if len(llista) >= 1 and index <= (len(llista)-1):
                     return llista[index]
                 else:
@@ -290,7 +315,7 @@ class EvalVisitor(jsbachVisitor):
         else:
             nomll = l[1].getText()
             if self.stack.existsInTs(nomll):
-                llistaNotes = self.stack.getValue()['ts'][nomll]
+                llistaNotes = self.stack.getInfoFunc()['ts'][nomll]
                 self.partitura.append(llistaNotes)
             else:
                 raise Exception('No existeix la llista amb nom' + nomll)
@@ -339,7 +364,8 @@ class EvalVisitor(jsbachVisitor):
 
     def visitVarId(self, ctx):
         if self.stack.existsInTs(ctx.getText()):
-            return self.stack.getValue()['ts'][ctx.getText()]
+            var = self.stack.getInfoFunc()['ts'][ctx.getText()]
+            return var
         else:
             raise Exception('La variable ' + ctx.getText() +
                             ' no està al diccionari')
@@ -396,6 +422,7 @@ def main():
 
     notes = visitor.visit(tree)
 
+    '''
     fitxerBase = open('generador.lily', 'r')
     inici = ''
     for linea in fitxerBase:
@@ -422,6 +449,7 @@ def main():
     remove(nomPrograma + '.lily')
     remove(nomPrograma + '.midi')
     remove(nomPrograma + '.wav')
+    '''
     
 if __name__ == '__main__':
     main()

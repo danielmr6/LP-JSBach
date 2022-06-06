@@ -1,6 +1,6 @@
 # El doble intèrpret de JSBach
 
-Aquesta pàgina descriu la pràctica de GEI-LP (edició 2021-2022 Q2). La nostra tasca ha sigut implementar un doble intèrpret per a un llenguatge de programació musical anomenat JSBach. La sortida d'aquest doble intèrpret és una partitura i uns fitxers de so que reproduiràn la melodia descrita pel compositor.
+Aquesta pàgina descriu la pràctica de GEI-LP (edició 2021-2022 Q2). La meva tasca ha sigut implementar un doble intèrpret per a un llenguatge de programació musical anomenat JSBach. La sortida d'aquest doble intèrpret és una partitura i uns fitxers de so que reproduiran la melodia descrita pel compositor.
 
 Cal aclarir que diem que és un *doble* intèrpret perquè funciona en el sentit informàtic (interpreta un programa) i en el sentit musical (interpreta una peça de música).
 
@@ -36,12 +36,26 @@ La primera instrucció del programa `<!> "Hallo Bach"` és una instrucció d'esc
 
 ## Gràmatica
 
+Al fitxer `jsbach.g4` està inclosa tota la gramàtica relacionada amb JSBach i els comentaris de cada apartat. Tot i que el fitxer conté diferents explicacions comentant que és cada cosa, és important aclarir diferents temes:
+- Els noms de les funcions han de començar sí o sí per una lletra majúscula. A més, han de tenir un altre caràcter com a mínim per poder donar un nom més representatiu a la funció.
+- Al ser un llenguate procedural, l'arrel de la gramàtica és la declaració de funcions, ja que en el codi tot conjunt d'instruccions ha d'estar dins d'una funció.
+- Dintre d'una cadena de text, he permès que es pugui introduir qualsevol caràcter o símbol excepte els següents:
+  - `'\n'`: Salt de línia.
+  - `'\r'`: Un return.
+  - `'\t'`: Una tabulació de 4 espais.
+  - `'"'` : Evitem que es pugui ficar dins d'una cadena perquè sino donaria errors pel fet de tancar i obrir les cadenes de manera irregular.
+- Les expressions booleanes sempre retornen un número. Si és 0, el seu significat és fals, i en cas de ser més gran a 0, el significat del valor resultant de la expressió serà cert.
+- He pensat que era més adient separar les expressions normals de les expressions sobre llistes per tenir una idea més clara de que era cada cosa.
 
 ## Intèrpret
 
 En aquesta secció parlaré dels aspectes més importants  relacionats amb el desenvolupament de l'intèrpret en el fitxer `jsbach.py`. 
 
-Primerament, hi ha definit el mètode `main()` que llegeix l'entrada en funció dels paràmetres que es passen. Si es passa més d'un es llegeix el fitxer com a segon paràmetre i s'interpeta, en cas contrari es llegeix des de la terminal.
+Primerament, hi ha definit el mètode `main()` que llegeix l'entrada en funció dels paràmetres que es passen:
+
+- Un argument: Es llegeix el fitxer i es comprova la seva extensió sigui '.jsb'. A partir d'aquí, s'interpeta el programa. Començarà per defecte pel mètode Main del programa, en cas de no haver Main es llençarà l'excepció.
+- Dos arguments: El primer és el programa. I en aquest segon cas, el segon argument ha de ser el nom de la funció per la qual es vol començar a executar i no ha de tenir paràmetres.
+- Més de dos arguments: El segon argument ha de ser el nom de la funció per la qual es vol començar a executar i la resta són els valors dels paràmetres de la funció.
 
 En relació amb els visitadors, he afegit un visitador anomenat `EvalVisitor`, el qual hereda del visitor `jsbachVisitor`. Aquest últim s'ha generat després d'executar la següent comanda per terminal:
 
@@ -54,7 +68,8 @@ Això permet compilar la gràmatica i generar els fitxers:
  
 A més de generar la plantilla del visitor mencionat anteriorment: `jsbachVisitor.py`.
 
-Una vegada entrem dins del visitador, tenim la constructora que inicialitza les diferents estructures de dades. (EXPLICAR EN DETALLE CUANDO SE ACABE)
+Una vegada entrem dins del visitador, tenim la constructora que inicialitza les diferents estructures de dades. 
+
 
 A continuació, tenim el mètode `visitRoot(self,ctx)`. La seva funció principal és visitar tots els fills i guardar totes les dades de les funcions, ja que a l'arrel de la gramàtica tenim amb màxima prioritat les declaracions de funcions (JSBach és procedural). 
 

@@ -15,21 +15,49 @@ else:
 
 
 class Notes:
+    '''
+    Constructora de la classe Notes.
+    Es crea el diccionari amb totes les notes possibles des de la octava 0 (amb A0 i B0) fins la 8 (C8). Les claus del diccionari són els noms
+    de les notes i els valors són el nombre enter que representa la nota corresponent. Totes les notes que apareixin al programa sense número 
+    són sinònims de C4 (Do central), D4, E4, F4, G4, A4, B4.
+    '''
     def __init__(self):
-        self.__notes = { 'AO' : 1 , 'B0' : 2, 
+        self.__notes = { 'A0' : 1 , 'B0' : 2, 
                         'C1' : 3 , 'D1' : 4, 'E1' : 5, 'F1' : 6, 'G1' : 7, 'A1': 8, 'B1' : 9,
                         'C2' : 10 , 'D2' : 11, 'E2' : 12, 'F2' : 13, 'G2' : 14, 'A2': 15, 'B2' : 16,
                         'C3' : 17 , 'D3' : 18, 'E3' : 19, 'F3' : 20, 'G3' : 21, 'A3': 22, 'B3' : 23,
                         'C4' : 24 , 'D4' : 25, 'E4' : 26, 'F4' : 27, 'G4' : 28, 'A4': 29, 'B4' : 30,
                         'C5' : 31 , 'D5' : 32, 'E5' : 33, 'F5' : 34, 'G5' : 35, 'A5': 36, 'B5' : 37,
-                        'C6' : 38 , 'D6' : 41, 'E6' : 40, 'F6' : 41, 'G6' : 42, 'A6': 43, 'B6' : 44,
+                        'C6' : 38 , 'D6' : 39, 'E6' : 40, 'F6' : 41, 'G6' : 42, 'A6': 43, 'B6' : 44,
                         'C7' : 45 , 'D7' : 46, 'E7' : 47, 'F7' : 48, 'G7' : 49, 'A7': 50, 'B7' : 51,
                         'C8' : 52 }
+        
+    def isNoteValid(self, note: str):
+        return (note in self.__notes.keys())
+    
+    def getInt(self, note: str):
+        if self.isNoteValid(note):
+            return self.__notes[note]
+        else:
+            raise Exception('La nota ' + note + ' no és vàlida')
+        
+    def getNote(self, num: int):
+        for key in self.__notes.keys():
+            if self.__notes[key] == num:
+                return key
+        return None
+    
+    def rangAccepted(self, num: int):
+        return (num >= 1 and num <= 52)
+    
+    def changeFormat(self, note: str):
+        octava = {'0' : ",,," , '1' : ",," , '2' : "," , 
+                  '3' :  "", '4' : "'" , '5' : "''" , '6' : "'''" , 
+                  '7' : "''''" , '8' : "'''''" }
 
-        self.__notesO4 = {'C' : 24 , 'D' : 25, 'E' : 26, 'F' : 27, 'G' : 28, 'A': 29, 'B' : 30}
+        return (note[0].lower() + octava[note[1]])
 
-    def isNoteValid(self, note:str):
-        return (note in self.__notes.keys() or note in self.__notesO4.keys())
+
 
 class Heap:
     
@@ -69,6 +97,7 @@ class EvalVisitor(jsbachVisitor):
 
     def __init__(self, nomFuncioIni: str, parametres: list):
         self.stack = Heap()
+        self.notes = Notes()
         if nomFuncioIni != None and nomFuncioIni != 'Main':
             self.nomFuncioInicial = nomFuncioIni
             self.parametresIni = parametres
@@ -189,25 +218,25 @@ class EvalVisitor(jsbachVisitor):
         for child in range(1,n):
             valor = self.visit(l[child])
             esEnter = isinstance(valor, int)
-            esNota = isinstance(valor, str)
             esLlista = isinstance(valor, list)
             if esEnter:
                 if valor >= 0:
                     res += ' ' + str(valor)       
                     
-            elif esNota:
-                res += ' ' +  valor
-                
             elif esLlista:
                 res += ' ' + '['
                 n = len(valor)
                 for i in range(0,n):
                     if i == n-1:
-                        res += valor[i]
+                        res += str(valor[i])
                     else:
-                        res += valor[i] + ','
+                        res += str(valor[i]) + ','
                 res += ']'
-            else:
+                
+            elif  self.notes.isNoteValid(valor):
+                res += ' ' +  valor
+                
+            else: 
                 res += ' ' + l[child].getText()[1:-1]
         print(res)
 
@@ -227,6 +256,7 @@ class EvalVisitor(jsbachVisitor):
             value = self.visitListConst(l[2])
         else:
             value = self.visit(l[2])
+            
         self.stack.getInfoFunc()['ts'][key] = value
         return value
 
@@ -243,15 +273,19 @@ class EvalVisitor(jsbachVisitor):
         n = len(l)
         valorsAux = []
         if n >= 1:
-            for i in range(1, n-1):
-                valorsAux.append(l[i].getText())
+            if l[1].getSymbol().type == jsbachParser.NUM:
+                for i in range(1, n-1):
+                    valorsAux.append(self.visitNum(l[i]))
+            else:
+                for i in range(1, n-1):
+                    valorsAux.append(self.visitNote(l[i]))
         return valorsAux
 
     def visitListAddStmt(self, ctx):
         l = list(ctx.getChildren())
         noml = l[0].getText()
         element = self.visit(l[2])
-        if noml in self.stack.getInfoFunc()['ts'].keys():
+        if self.stack.existsInTs(noml):
             llista = self.stack.getInfoFunc()['ts'][noml]
             llista.append(element)
             self.stack.getInfoFunc()['ts'][noml] = llista
@@ -303,23 +337,34 @@ class EvalVisitor(jsbachVisitor):
         else:
             raise Exception('Índex erroni: el valor mínim ha de ser 1!')
         
-
-    def visitPlayStmt(self, ctx):
+    def visitPlayId(self, ctx):
+        l = list(ctx.getChildren())
+        nomll = l[1].getText()
+        if self.stack.existsInTs(nomll):
+            llistaNotes = self.stack.getInfoFunc()['ts'][nomll]
+            if isinstance(llistaNotes, list):
+                for i in llistaNotes:
+                    if self.notes.isNoteValid(i):
+                        self.partitura.append(i)
+                    else:
+                        if isinstance(i, int) and self.notes.rangAccepted(i):
+                            if self.notes.isNoteValid(self.notes.getNote(i)):
+                                self.partitura.append(self.notes.getNote(i))
+                        else:
+                            raise Exception('El valor no està en un rang vàlid per ser nota')
+                            
+            else:   
+                self.partitura.append(llistaNotes)
+        else:
+            raise Exception('No existeix la llista amb nom' + nomll)
+        
+    def visitPlayLists(self, ctx):
         l = list(ctx.getChildren())
         n = len(l)
-        if l[1].getText() == '{':
-            i = 2
-            while i < n and l[i].getText() != '}':
-                self.partitura.append(l[i].getText())
-                i += 1
-        else:
-            nomll = l[1].getText()
-            if self.stack.existsInTs(nomll):
-                llistaNotes = self.stack.getInfoFunc()['ts'][nomll]
-                self.partitura.append(llistaNotes)
-            else:
-                raise Exception('No existeix la llista amb nom' + nomll)
-
+        llista = self.visitListConst(l[1])
+        for i in llista:
+            self.partitura.append(i)
+        
     def visitRelExp(self, ctx):
         l = list(ctx.getChildren())
         if len(l) == 1:
@@ -329,8 +374,14 @@ class EvalVisitor(jsbachVisitor):
             elif numero == 0:
                 return 0
         else:
-            opL = int(self.visit(l[0]))
-            opR = int(self.visit(l[2]))
+            opL = self.visit(l[0])
+            opR = self.visit(l[2])
+            if self.notes.isNoteValid(opL):
+                opL = self.notes.getInt(opL)
+            
+            if self.notes.isNoteValid(opR):
+                opR = self.notes.getInt(opR)
+        
             tipus = l[1].getSymbol().type
             if tipus == jsbachParser.EQ:
                 return int(opL == opR)
@@ -350,13 +401,37 @@ class EvalVisitor(jsbachVisitor):
 
     def visitAddSub(self, ctx):
         l = list(ctx.getChildren())
-        exprL = int(self.visit(l[0]))
-        exprR = int(self.visit(l[2]))
-        if l[1].getSymbol().type == jsbachParser.SUB:
-            return int(exprL - exprR)
-
-        elif l[1].getSymbol().type == jsbachParser.ADD:
-            return int(exprL + exprR)
+        exprL = self.visit(l[0])
+        exprR = self.visit(l[2])
+        esNotaL = self.notes.isNoteValid(exprL)
+        esNotaR = self.notes.isNoteValid(exprR)
+        if esNotaL or esNotaR:
+            if esNotaL:
+                exprL = self.notes.getInt(exprL)
+            elif esNotaR:
+                exprR = self.notes.getInt(exprR)
+            else:
+                exprL = self.notes.getInt(exprL)
+                exprR = self.notes.getInt(exprR)
+                
+            if l[1].getSymbol().type == jsbachParser.SUB:
+                resultat = (exprL-exprR)
+                if self.notes.rangAccepted(resultat):
+                    return self.notes.getNote(resultat)
+                else:
+                    raise Exception('El valor de la nota no està en un rang valid')
+                
+            elif l[1].getSymbol().type == jsbachParser.ADD:
+                resultat = (exprL+exprR)
+                if self.notes.rangAccepted(resultat):
+                    return self.notes.getNote(resultat)
+                else:
+                    raise Exception('El valor de la nota no està en un rang valid')
+        else:
+            if l[1].getSymbol().type == jsbachParser.SUB:
+                return int(exprL - exprR)
+            elif l[1].getSymbol().type == jsbachParser.ADD:
+                return int(exprL + exprR)
 
     def visitParentesis(self, ctx):
         l = list(ctx.getChildren())
@@ -371,7 +446,13 @@ class EvalVisitor(jsbachVisitor):
                             ' no està al diccionari')
 
     def visitNote(self, ctx: jsbachParser.NoteContext):
-        return ctx.getText()
+        llargada = len(ctx.getText())
+        if llargada == 1: 
+            #Si la nota no té la octava explícitament, li afegim el valor de la quarta octava.
+            nou_str = ctx.getText() + '4'
+            return nou_str
+        else:
+            return ctx.getText()
 
     def visitNum(self, ctx: jsbachParser.NumContext):
         return int(ctx.getText())
@@ -380,17 +461,50 @@ class EvalVisitor(jsbachVisitor):
         l = list(ctx.getChildren())
         exprL = self.visit(l[0])
         exprR = self.visit(l[2])
-        if l[1].getSymbol().type == jsbachParser.MUL:
-            return int(exprL * exprR)
-
-        elif l[1].getSymbol().type == jsbachParser.DIV:
-            if exprR.getText() != '0':
-                return int(exprL/exprR)
+        esNotaL = self.notes.isNoteValid(exprL)
+        esNotaR = self.notes.isNoteValid(exprR)
+        if esNotaL or esNotaR:
+            if esNotaL:
+                exprL = self.notes.getInt(exprL)
+            elif esNotaR:
+                exprR = self.notes.getInt(exprR)
             else:
-                raise Exception('No es pot dividir per zero!')
-
-        elif l[1].getSymbol().type == jsbachParser.MOD:
-            return int(exprL % exprR)
+                exprL = self.notes.getInt(exprL)
+                exprR = self.notes.getInt(exprR)
+            
+            if l[1].getSymbol().type == jsbachParser.MUL:
+                resultat = exprL * exprR
+                if self.notes.rangAccepted(resultat):
+                    return self.notes.getNote(resultat)
+                else:
+                    raise Exception('El valor de la nota no està en un rang valid')
+            elif l[1].getSymbol().type == jsbachParser.DIV:
+                if exprR != 0:
+                    resultat = exprL / exprR
+                    if self.notes.rangAccepted(resultat):
+                        return self.notes.getNote(resultat)
+                    else:
+                        raise Exception('El valor de la nota no està en un rang valid')
+                else:
+                    raise Exception('No es pot dividir per zero!')
+                
+            elif l[1].getSymbol().type == jsbachParser.MOD:
+                resultat = exprL % exprR
+                if self.notes.rangAccepted(resultat):
+                    return self.notes.getNote(resultat)
+                else:
+                    raise Exception('El valor de la nota no està en un rang valid')
+        else:
+            if l[1].getSymbol().type == jsbachParser.MUL:
+                return int(exprL * exprR)
+            elif l[1].getSymbol().type == jsbachParser.DIV:
+                if exprR.getText() != '0':
+                    return int(exprL / exprR)
+                else:
+                    raise Exception('No es pot dividir per zero!')
+                
+            elif l[1].getSymbol().type == jsbachParser.MOD:
+                return int(exprL % exprR)
 
 
 def main():
@@ -398,7 +512,7 @@ def main():
     if len(sys.argv) > 1:
         if sys.argv[1].endswith('.jsb'):
             nomPrograma = sys.argv[1].split('.')[0]
-            input_stream = FileStream(sys.argv[1])
+            input_stream = FileStream(sys.argv[1], encoding='utf-8')
             if len(sys.argv) == 2:
                 visitor = EvalVisitor(None, None)
             elif len(sys.argv) > 2:
@@ -422,7 +536,8 @@ def main():
 
     notes = visitor.visit(tree)
 
-    '''
+
+    cjtnotes = Notes()
     fitxerBase = open('generador.lily', 'r')
     inici = ''
     for linea in fitxerBase:
@@ -431,8 +546,9 @@ def main():
     lilyFile = open(nomPrograma + '.lily', 'a')
     lilyFile.write(inici + '\n')
 
+    
     for note in notes:
-        lilyFile.write("%s'4 " % note.lower())
+        lilyFile.write("%s " % cjtnotes.changeFormat(note))
 
     lilyFile.write("\n }\n")
     lilyFile.write(" \layout {" "}\n")
@@ -449,7 +565,7 @@ def main():
     remove(nomPrograma + '.lily')
     remove(nomPrograma + '.midi')
     remove(nomPrograma + '.wav')
-    '''
+    
     
 if __name__ == '__main__':
     main()

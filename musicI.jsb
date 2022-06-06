@@ -11,8 +11,31 @@ Main |:
     :|
     
     <!> "Acabem While"
-    <!> x
-    <:> { A B C D E F G }
+    <!> "La x es " x
+    src <- { A B C D E F G }
+    <!> "El primer element es " src[1]
+    <!> "El darrer element es " src[7]
+    <!> "El nombre d'elements es " #src
+    
+    <!> src
+    src << A5
+    <!> src
+    8< src[1]
+    <!> src
+    
+    src <- { 1 2 3 4 5 6 9 }
+    <!> "El primer element es " src[1]
+    <!> "El darrer element es " src[7]
+    <!> "El nombre d'elements es " #src
+    
+    <!> src
+    src << 8
+    <!> src
+    8< src[1]
+    <!> src
+    
+    <:> src
+    
     
     Altra x
 :|

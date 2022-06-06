@@ -89,8 +89,13 @@ class jsbachVisitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
-    # Visit a parse tree produced by jsbachParser#playStmt.
-    def visitPlayStmt(self, ctx:jsbachParser.PlayStmtContext):
+    # Visit a parse tree produced by jsbachParser#PlayLists.
+    def visitPlayLists(self, ctx:jsbachParser.PlayListsContext):
+        return self.visitChildren(ctx)
+
+
+    # Visit a parse tree produced by jsbachParser#PlayId.
+    def visitPlayId(self, ctx:jsbachParser.PlayIdContext):
         return self.visitChildren(ctx)
 
 

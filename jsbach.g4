@@ -93,11 +93,9 @@ sentenceWhile : WHILE relExp  L_LMT conjStmt R_LMT ;
 listStmt
     : listAddStmt 
     | listCutStmt 
-    | listGet
-    | listSize
     ;
 
-listConst : '{' (NUM | NOTE )* '}' ;
+listConst : '{' (NUM | NOTE)* '}' ;
 
 listAddStmt: ID LIST_ADD (expr) ;
 
@@ -110,8 +108,8 @@ listGet : ID L_KEY (expr | listSize) R_KEY ;
 
 /****************NOTES****************/
 playStmt
-    : PLAY '{' (expr+) '}' 
-    | PLAY ID
+    : PLAY listConst #PlayLists 
+    | PLAY ID #PlayId
     ;
 
 
@@ -169,8 +167,8 @@ ELSE : 'else' ;
 /*****************Definicions elementals*****************/
 NUM  : (DIGIT)+ ;
 DIGIT   : ('0'..'9') ;
-FNC_NAME : [A-Z][a-zA-Z]+;
-ID  : [a-z][a-zA-Z]* ;
+FNC_NAME : [A-Z\u0080-\u00FF]([a-zA-Z\u0080-\u00FF] | '_')+;
+ID  : [a-z\u0080-\u00FF]([a-zA-Z\u0080-\u00FF] | '_')* ;
 
 /*****************Notes*****************/
 PLAY : '<:>' ;
@@ -190,7 +188,7 @@ DIV : '/' ;
 MOD : '%' ;
 
 /****************Definició d'una cadena****************/
-CADENA : '"' (~('"' | '\n' | '\r' | '\t'))*'"';
+CADENA : '"' (~('"' | '\n' | '\r' | '\t'))* '"';
 
 
 /****************Definició de skip****************/

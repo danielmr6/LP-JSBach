@@ -68,12 +68,9 @@ Això permet compilar la gràmatica i generar els fitxers:
  
 A més de generar la plantilla del visitor mencionat anteriorment: `jsbachVisitor.py`.
 
-Una vegada entrem dins del visitador, tenim la constructora que inicialitza les diferents estructures de dades. 
-
-
-A continuació, tenim el mètode `visitRoot(self,ctx)`. La seva funció principal és visitar tots els fills i guardar totes les dades de les funcions, ja que a l'arrel de la gramàtica tenim amb màxima prioritat les declaracions de funcions (JSBach és procedural). 
-
-Seguidament, es comprova si està definida la funció `Main` al programa en JSBach, si està declarada es visita directament el seu codi i, en cas de que no estigués definida, es llençaria una excepció.
+Una vegada entrem dins del visitador, tenim la constructora que inicialitza les diferents estructures de dades. Com el fitxer ja té els diferents comentaris que documenten el programa, aquí només vull destacar  els aspectes a tenir en compte del meu intèrpret:
+- Es poden reproduir `<:>` (play) llistes d'enters, sempre i quan els valors d'aquests estiguin dins del rang de les notes (entre 1 i 52).
+- Quan es fan operacions amb notes, sempre es comprova que el valor resultant estigui dins del rang acceptable, en cas de no estar es llença una excepció.
 
 
 ## Invocació de l'intèrpret

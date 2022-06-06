@@ -23,7 +23,8 @@ Main |:
     8< src[1]
     <!> src
     
-    src <- { 1 2 3 4 5 6 9 }
+    src <- { 31 42 52 48 40 35 29 }
+    <!> src
     <!> "El primer element es " src[1]
     <!> "El darrer element es " src[7]
     <!> "El nombre d'elements es " #src

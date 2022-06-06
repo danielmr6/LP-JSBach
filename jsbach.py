@@ -717,12 +717,35 @@ class EvalVisitor(jsbachVisitor):
         else:
             raise Exception('No existeix la llista amb nom' + name_var)
 
+    '''
+    Mètode: visitPlayLists(self, ctx)
+    
+    Retorna: 
+        Res.
+    
+    Comportament:
+    L'objectiu d'aquest mètode és anar afegint els valors de la llista a la 
+    partitura per tal d'aconseguir tenir la partitura amb les notes o nombres 
+    corresponents.
+    '''
     def visitPlayLists(self, ctx):
         l = list(ctx.getChildren())
         list_notes = self.visitListConst(l[1])
         for i in list_notes:
             self.sheetMusic.append(i)
 
+    '''
+    Mètode: visitRelExp(self, ctx)
+    
+    Retorna: Int
+    
+    Comportament:
+    Aquesta funció avalua els dos operands amb l'operador per tal de retornar
+    un valor com a cert (1 o més gran) o fals (0). Si un operand és una nota, 
+    es passa al valor enter que està associat a aquella nota per fer la 
+    comprovació.
+    '''
+    
     def visitRelExp(self, ctx):
         l = list(ctx.getChildren())
         if len(l) == 1:
@@ -757,6 +780,20 @@ class EvalVisitor(jsbachVisitor):
                 raise Exception('Operador ' + type +
                                 'no està definit a JSBach')
 
+    '''
+    Mètode: visitAddSub(self, ctx)
+    
+    Retorna: 
+        Nombre o Nota.
+    
+    Comportament:
+    Aquesta funció retorna la suma de dues expressions. En el cas de
+    tenir una nota en algun dels dos operands, el que es fa és passar les notes
+    al valor enter que representen, s'operen i si el valor resultant és valid, 
+    es retorna en format de nota. Si no és valid el resultat es llença una 
+    excepció. Si cap dels operands és una nota, es retorna el valor resultant de 
+    l'operació suma o resta.
+    '''
     def visitAddSub(self, ctx):
         l = list(ctx.getChildren())
         exprL = self.visit(l[0])
@@ -793,10 +830,31 @@ class EvalVisitor(jsbachVisitor):
             elif l[1].getSymbol().type == jsbachParser.ADD:
                 return int(exprL + exprR)
 
+    '''
+    Mètode: visitParentesis(self, ctx)
+    
+    Retorna: 
+        Expressió.
+    
+    Comportament:
+    L'únic que fa aquesta funció és visitar i retornar l'expressió que està
+    entre parèntesis.
+    '''
     def visitParentesis(self, ctx):
         l = list(ctx.getChildren())
         return self.visit(l[1])
 
+    '''
+    Mètode: visitVarId(self, ctx)
+    
+    Retorna: 
+        Expressió.
+    
+    Comportament:
+    Donat un nom d'una variable, es comprova si existeix a la taula de símbols
+    de la pila, si no existeix es llença l'excepció. En el cas d'estar present a 
+    la taula, es retorna el valor que té la variable amb aquell nom.
+    '''
     def visitVarId(self, ctx):
         if self.stack.existsInTs(ctx.getText()):
             var = self.stack.getInfoFunc()['ts'][ctx.getText()]
@@ -805,6 +863,17 @@ class EvalVisitor(jsbachVisitor):
             raise Exception('La variable ' + ctx.getText() +
                             ' no està al diccionari')
 
+    '''
+    Mètode: visitNote(self, ctx)
+    
+    Retorna: 
+        String-
+    
+    Comportament:
+    Aquesta funció comprova si la nota no té la octava explícitament (això vol dir
+    que pertany a la quarta). Si no la té, s'afegeix el valor de la quarta octava 
+    i es retorna el nou string. Si la té, es retorna directament el string-
+    '''
     def visitNote(self, ctx: jsbachParser.NoteContext):
         length = len(ctx.getText())
         if length == 1:
@@ -815,9 +884,33 @@ class EvalVisitor(jsbachVisitor):
         else:
             return ctx.getText()
 
+    '''
+    Mètode: visitNum(self, ctx)
+    
+    Retorna: 
+        Integer.
+    
+    Comportament:
+    Aquesta funció retorna el número en forma d'enter.
+    '''
     def visitNum(self, ctx: jsbachParser.NumContext):
         return int(ctx.getText())
 
+    '''
+    Mètode: visitNum(self, ctx)
+    
+    Retorna: 
+        Integer o Nota.
+    
+    Comportament:
+    Aquesta funció comprova si algun dels operands és una nota. En el cas de
+    tenir una nota en algun dels dos operands, el que es fa és passar les notes
+    al valor enter que representen, s'operen i si el valor resultant és valid, 
+    es retorna en format de nota. Si no és valid el resultat es llença una 
+    excepció. Si cap dels operands és una nota, es retorna el valor resultant de 
+    l'operació. Quan és una divisió si l'operand de la dreta és un 0 es llença 
+    l'excepció.
+    '''
     def visitDivMulMod(self, ctx):
         l = list(ctx.getChildren())
         exprL = self.visit(l[0])
@@ -895,7 +988,7 @@ def main():
 
     notes = visitor.visit(tree)
 
-    cjtnotes = Notes()
+    cjt_notes = Notes()
     generator_file = open('generador.lily', 'r')
     start = ''
     for line in generator_file:
@@ -905,7 +998,7 @@ def main():
     lilyFile.write(start + '\n')
 
     for note in notes:
-        lilyFile.write("%s " % cjtnotes.changeToLilyFormat(note))
+        lilyFile.write("%s " % cjt_notes.changeToLilyFormat(note))
 
     lilyFile.write("\n }\n")
     lilyFile.write(" \\layout {" "}\n")

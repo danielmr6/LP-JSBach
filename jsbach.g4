@@ -3,7 +3,7 @@ grammar jsbach;
 /*
 Com JSBach és un llenguatge procedural, el que posem a l'arrel de la gràmatica és que el programa 
 estarà format per una o més declaracions de funcions, on dintre de cadascuna podrem dividir les parts del codi
-corresponent.
+corresponent en instruccions.
 */
 root : declFunc+ EOF ;
 
@@ -18,7 +18,7 @@ el cos que és un conjunt d'instruccions, delimitat per els limitadors quan es d
 declFunc : FNC_NAME (ID)* L_LMT conjStmt R_LMT ;
 
 
-/**************** CONJUNT D'INSTRUCCIONS****************/
+/****************CONJUNT D'INSTRUCCIONS****************/
 /*
 El conjunt d'instruccions és tot el que es pot trobar dins d'un codi d'una funció en JSBach. En aquest cas, he posat 
 que pot haver un conjunt d'instruccions buit, ja que es pot donar el cas d'haver una funció que no té res de codi dins.
@@ -38,7 +38,7 @@ stmt
 /*
 La crida a una funció ve determinada pel nom de la funció, el qual ha de començar per una lletra majúscula per poder fer 
 la distinció entre el nom d'una funció i una variable del codi. Seguidament, es poden donar 0 o més expressions, les quals 
-conformen els possibles paràmetres de la funció corresponent.
+conformen els possibles paràmetres de la funció corresponent. 
 */
 callFunc : FNC_NAME (expr | listSize | listGet)* ;
 
@@ -56,16 +56,17 @@ readStmt : READ ID;
 
 /*
 La gramàtica d'escriptura d'un valor ve definida pel token d'escriptura, seguit de 0 o més tokens, els quals poden ser una cadena
-o una expressió. Una cadena està formada per les cometes '"', després tota la informació que es vulgui donar excepte: \n, \r i |t, 
-i per finalitzar les cometes '"' que tanquen la cadena.
+o una expressió, a més de la consulta d'un valor d'una llista i el nombre d'elements que té. Una cadena està formada per les cometes '"', 
+després tota la informació que es vulgui donar excepte: \n, \r i |t, i per finalitzar les cometes '"' que tanquen la cadena.
 */
 writeStmt : WRITE (listGet | listSize | expr | CADENA)* ; 
 
 
 /*****************ASSIGNACIÓ****************/
 /*
-Una assignació està formada pel primer token que es un ID, la variable on es guardarà la informació, seguida del token d'assignar i després
-l'expressió, que conté el valor el qual es vol guardar.
+Una assignació està formada pel primer token que es un ID, el nom de la variable on es guardarà la informació, seguida del token d'assignació i després
+l'expressió, que conté el valor el qual es vol guardar. L'expressió pot ser la consulta d'un valor o nombre d'elements d'una llista, la constructora d'una
+llista o directament una expressió bàsica.
 */
 assigs : ID ASSIG expr 
     | ID ASSIG (listConst | listGet | listSize)
@@ -90,23 +91,59 @@ sentenceWhile : WHILE relExp  L_LMT conjStmt R_LMT ;
 
 
 /****************LLISTES****************/
+
+/*
+Una instrucció del tipus llista pot ser esborrar l'i-èsim element o afegir l'element al final de la llista.
+*/
 listStmt
     : listAddStmt 
     | listCutStmt 
     ;
 
-listConst : '{' (NUM | NOTE)* '}' ;
+/*
+La constructora d'una llista està formada pels dos símbols que representen la creació de la llista i dintre tenim
+els possibles valors que poden conformar una llista, és a dir, un número o una nota. 
+*/
+listConst : LCOR (NUM | NOTE)* RCOR ;
 
+/*
+Per afegir un element a una llista tenim la gramàtica següent. Primer tenim l'ID que representa el nom de la llista,
+seguidament tenim l'operador d'afegir un element a una llista en JSBach, i finalment tenim l'expressió, que conté el 
+valor de l'element que es vol incloure al final de la llista. La idea per afegir un element seria: nomLlista << expressió.
+*/
 listAddStmt: ID LIST_ADD (expr) ;
 
+
+/*
+Per eliminar un element d'una llista tenim la gramàtica següent. Es pot observar que el primer de tot és l'operador 
+de tisores (tallar/eliminar un element), i a continuació tenim l'id que representa el nom de la llista, seguit de
+els limitadors i dins d'aquests l'expressió que indica l'índex de l'element que es vol esborrar. 
+La idea seria aquesta: 8< nomLlista[expressió]
+*/
 listCutStmt: LIST_CUT ID L_KEY (listSize | expr) R_KEY;
 
+/*
+Aquesta instrucció retorna el nombre d'elements que té la llista amb nom ID. Està formada pel operador que indica 
+que es vol consultar el tamany de la llista amb nom ID. La idea seria: #nomLlista
+*/
 listSize: LIST_SIZE ID ;
 
+
+/*
+Aquesta instrucció retorna el valor de l'element i-èsim de la llista. La gramàtica està formada pel nom de la llista,
+seguida dels limitadors i dintre d'aquests es troba la expressió o la consulta de tamany de la llista. Un exemple 
+seria: lista[expressió] o lista[#lista]
+*/
 listGet : ID L_KEY (expr | listSize) R_KEY ; 
 
 
 /****************NOTES****************/
+
+/*
+Aquesta instrucció afegeix les notes corresponents a la partitura que després es genera en acabar el programa jsbach. La 
+gramàtica pot venir donada de dues maneres: el símbol de play (<:>) seguit de la constructora d'una llista o el símbol 
+de play (<:>) seguit d'un ID que representa una o més notes, ja sigui en format NOTE o en format NUM.
+*/
 playStmt
     : PLAY listConst #PlayLists 
     | PLAY ID #PlayId
@@ -115,11 +152,24 @@ playStmt
 
 /****************EXPRESSIONS****************/
 
+/*
+Arribem finalment a les expressions amb operadors relacionals. 
+
+Per definir una expressió amb operadors relacionals tenim les dues expressions  
+i just enmig tenim l'operador corresponent. Aquesta instrucció sempre retornarà un número, si és 1 o més d'1 retornarà 
+cert, en cas contrari retorna fals. Uns exemples serien: x <= 10 o y > 5.
+*/
 relExp 
     : (expr) (EQ | DIF | LST | GRT | GREQ | LSEQ) (expr) 
     | NUM
     ;
 
+/*
+Per concluir, tenim les expressions amb operadors aritmètics i altres.
+La gramàtica d'una expressió ve donada pels limitadors de parèntesis i l'expressió dins d'aquests, o una expressió amb un operador 
+aritmètic i un altra expressió. Per acabar, una expressió pot ser: una nota (NOTE), un nombre (NUM) o una variable (ID). Alguns 
+exemples serien: (10/2), C4 - 1, x * 5 o 2 + 2.
+*/
 expr 
     : LPAR expr RPAR #Parentesis
     | expr (DIV | MUL | MOD) expr #DivMulMod
@@ -157,6 +207,8 @@ L_KEY : '[' ;
 R_KEY : ']' ;
 LPAR : '(' ;
 RPAR : ')' ;
+LCOR : '{' ;
+RCOR : '}' ;
 
 /*****************Condicionals i iteracions*****************/
 IF : 'if' ;

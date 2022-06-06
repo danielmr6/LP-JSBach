@@ -123,4 +123,6 @@ Els diferents fitxers que conformen la versió final de la pràctica són:
 
 - ffmpeg: https://www.ffmpeg.org/
 
+- pep8: https://peps.python.org/pep-0008/
+
 - Comunicació amb processos: https://recursospython.com/guias-y-manuales/subprocess-creacion-y-comunicacion-con-procesos/

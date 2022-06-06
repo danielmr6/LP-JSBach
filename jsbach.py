@@ -248,13 +248,9 @@ class Heap:
     def isEmpty(self):
         return self.__stack == []
     
-    
-
-
-
 class EvalVisitor(jsbachVisitor):
     '''
-    Constuctora del visitador EvalVisitor. 
+    Constructora del visitador EvalVisitor. 
     El primer paràmetre defineix el nom de la funció inicial que es vol executar en començar el programa, i el segon paràmetre
     és la llista de paràmetres de la funció corresponent (si en té). Si no es passa cap nom, per defecte el programa començarà per la funció Main.
     S'inicialitzen els atributs stack  i notes, el primer serà la pila que gestionarà la informació i el segon serà important per controlar 
@@ -294,7 +290,6 @@ class EvalVisitor(jsbachVisitor):
         musicals vàlides que s'afegeixin al llarg de tot el codi.
         '''
         self.sheetMusic = []
-
   
     def visitRoot(self, ctx):
         l = list(ctx.getChildren())
@@ -345,8 +340,6 @@ class EvalVisitor(jsbachVisitor):
             blockCode = l[posCode]
             self.dataFunc[nameFunc] = {'nom' : nameFunc, 'parametres' : parameters, 'codi' : blockCode, 'ts' : tsAux}
            
-  
-  
     def visitCallFunc(self, ctx):
         l = list(ctx.getChildren())
         nParams = len(l)-1

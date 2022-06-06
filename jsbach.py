@@ -608,8 +608,8 @@ class EvalVisitor(jsbachVisitor):
                             ' no està al diccionari')
 
     def visitNote(self, ctx: jsbachParser.NoteContext):
-        llargada = len(ctx.getText())
-        if llargada == 1: 
+        length = len(ctx.getText())
+        if length == 1: 
             #Si la nota no té la octava explícitament, li afegim el valor de la quarta octava.
             nou_str = ctx.getText() + '4'
             return nou_str

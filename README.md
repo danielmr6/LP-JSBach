@@ -1,6 +1,8 @@
 # El doble intèrpret de JSBach
 
-Aquesta pàgina descriu la pràctica de GEI-LP (edició 2021-2022 Q2). La meva tasca ha sigut implementar un doble intèrpret per a un llenguatge de programació musical anomenat JSBach. La sortida d'aquest doble intèrpret és una partitura i uns fitxers de so que reproduiran la melodia descrita pel compositor.
+Aquesta pàgina descriu la pràctica de GEI-LP (edició 2021-2022 Q2) de Daniel Morón Roces. 
+
+La meva tasca ha sigut implementar un doble intèrpret per a un llenguatge de programació musical anomenat JSBach. La sortida d'aquest doble intèrpret és una partitura i uns fitxers de so que reproduiran la melodia descrita pel compositor.
 
 Cal aclarir que diem que és un *doble* intèrpret perquè funciona en el sentit informàtic (interpreta un programa) i en el sentit musical (interpreta una peça de música).
 

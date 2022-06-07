@@ -36,7 +36,7 @@ La primera instrucció del programa `<!> "Hallo Bach"` és una instrucció d'esc
 
 ## Gràmatica
 
-Al fitxer `jsbach.g4` està inclosa tota la gramàtica relacionada amb JSBach i els comentaris de cada apartat. Tot i que el fitxer conté diferents explicacions comentant que és cada cosa, és important aclarir diferents temes:
+Al fitxer `jsbach.g4` està inclosa tota la gramàtica relacionada amb JSBach i els comentaris de cada apartat. Tot i que el fitxer conté explicacions detallades, és important aclarir diferents temes que he tingut en compte:
 - Els noms de les funcions han de començar sí o sí per una lletra majúscula. A més, han de tenir un altre caràcter com a mínim per poder donar un nom més representatiu a la funció.
 - Al ser un llenguate procedural, l'arrel de la gramàtica és la declaració de funcions, ja que en el codi tot conjunt d'instruccions ha d'estar dins d'una funció.
 - Dintre d'una cadena de text, he permès que es pugui introduir qualsevol caràcter o símbol excepte els següents:
@@ -53,7 +53,7 @@ En aquesta secció parlaré dels aspectes més importants  relacionats amb el de
 
 Primerament, hi ha definit el mètode `main()` que llegeix l'entrada en funció dels paràmetres que es passen:
 
-- Un argument: Es llegeix el fitxer i es comprova la seva extensió sigui '.jsb'. A partir d'aquí, s'interpeta el programa. Començarà per defecte pel mètode Main del programa, en cas de no haver Main es llençarà l'excepció.
+- Un argument: Es llegeix el fitxer i es comprova que la seva extensió sigui '.jsb', sinò es llença l'excepció. A partir d'aquí, s'interpeta el programa. Començarà per defecte pel mètode Main del programa, en cas de no haver Main es llençarà l'excepció.
 - Dos arguments: El primer és el programa. I en aquest segon cas, el segon argument ha de ser el nom de la funció per la qual es vol començar a executar i no ha de tenir paràmetres.
 - Més de dos arguments: El segon argument ha de ser el nom de la funció per la qual es vol començar a executar i la resta són els valors dels paràmetres de la funció.
 
@@ -68,11 +68,11 @@ Això permet compilar la gràmatica i generar els fitxers:
  
 A més de generar la plantilla del visitor mencionat anteriorment: `jsbachVisitor.py`.
 
-Una vegada entrem dins del visitador, tenim la constructora que inicialitza les diferents estructures de dades. Com el fitxer ja té els diferents comentaris que documenten el programa, aquí només vull destacar  els aspectes a tenir en compte del meu intèrpret:
+Una vegada entrem dins del visitador, tenim la constructora que inicialitza les diferents estructures de dades. Com el fitxer ja té els diferents comentaris que documenten el programa i les funcions, aquí només vull destacar  els aspectes a tenir en compte del meu intèrpret:
 - Es poden reproduir `<:>` (play) llistes d'enters, sempre i quan els valors d'aquests estiguin dins del rang de les notes (entre 1 i 52).
 - Quan es fan operacions amb notes, sempre es comprova que el valor resultant estigui dins del rang acceptable, en cas de no estar es llença una excepció.
-
-
+- Per una part està el diccionari dataFunc i per una altra la pila (stack). El diccionari no guarda el context d'execució, en canvi la pila sí. Per aquest motiu, no s'afegeix una instància de dataFunc directament a la pila, sinò que s'afegeix una còpia del diccionari.
+- Els índexos en JSBach comencen per 1. Qualsevol índex que sigui inferior a aquest valor o superior al nombre d'elements que tingui la llista, provoca que es llenci una excepció.
 ## Invocació de l'intèrpret
 
 Per invocar l'intèrpret es fa amb la comanda `python3 jsbach.py` tot
@@ -102,7 +102,7 @@ i
 
 Els diferents fitxers que conformen la versió final de la pràctica són:
 
-- Un fitxer `README.md` que documenta el projecte.
+- Un fitxer `README.md` que documenta el projecte en termes generals.
 
 - Un fitxer `jsbach.g4` amb la gramàtica del LP.
 

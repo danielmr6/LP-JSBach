@@ -306,25 +306,25 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitRoot(self,ctx)
-    
+
     Retorna:
         Retorna una llista que és la partitura amb les notes del programa interpretat.
-    
+
     Comportament:
-    
-    La seva funció principal és visitar tots els fills i guardar totes les dades de les funcions, 
-    ja que a l'arrel de la gramàtica tenim amb màxima prioritat les declaracions de funcions (JSBach és procedural). 
-    Seguidament, es comprova quina és la funció que ha de començar. 
-        -Si ha de ser el Main, comprova si està definida al programa en JSBach, en cas de que no estigués definida, 
-        es llença una excepció. 
-        -Si s'ha de començar per una altra funció que no és el Main, es comprova 
+
+    La seva funció principal és visitar tots els fills i guardar totes les dades de les funcions,
+    ja que a l'arrel de la gramàtica tenim amb màxima prioritat les declaracions de funcions (JSBach és procedural).
+    Seguidament, es comprova quina és la funció que ha de començar.
+        -Si ha de ser el Main, comprova si està definida al programa en JSBach, en cas de que no estigués definida,
+        es llença una excepció.
+        -Si s'ha de començar per una altra funció que no és el Main, es comprova
         que estigui definit el mètode i que el nombre de paràmetres sigui l'adient,
-        en cas de fallar alguna de les dues coses es llença l'excepció. 
-    Si tot és correcte es guarda tota la informació de la funció a la pila des d'una còpia del diccionari, es visita el codi 
+        en cas de fallar alguna de les dues coses es llença l'excepció.
+    Si tot és correcte es guarda tota la informació de la funció a la pila des d'una còpia del diccionari, es visita el codi
     i després fa un remove del top de la pila.
     Finalment, retorna la partitura amb les notes.
     '''
-    
+
     def visitRoot(self, ctx):
         l = list(ctx.getChildren())
         n = len(l)
@@ -360,17 +360,17 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitDeclFunc(self, ctx)
-    
+
     Retorna:
         Res.
-    
+
     Comportament:
-    L'objectiu d'aquest mètode és guardar tota la informació de la funció declarada, concretament 
-    el nom, els paràmetres, el bloc de codi i la taula de símbols corresponent de la funció. Es 
+    L'objectiu d'aquest mètode és guardar tota la informació de la funció declarada, concretament
+    el nom, els paràmetres, el bloc de codi i la taula de símbols corresponent de la funció. Es
     divideix en dos casos: quan és una funció sense o amb paràmetres. Tota la informació necessària
     es guarda al diccionari dataFunc.
     '''
-    
+
     def visitDeclFunc(self, ctx):
         l = list(ctx.getChildren())
         n = len(l)
@@ -400,17 +400,17 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitCallFunc(self, ctx)
-    
+
     Retorna:
         Res.
     Comportament:
     L'objectiu d'aquest mètode és assegurar-se que la funció està definida i es crida bé,
     i a partir d'aquí es fa una còpia del diccionari de la funció, i en la còpia s'actualitzen
-    els paràmetres amb els seus valors a la taula de símbols. Una vegada està tot, insertem 
-    la còpia del diccionari  a la pila, visitem el codi i eliminem la còpia afegida, és a dir, 
+    els paràmetres amb els seus valors a la taula de símbols. Una vegada està tot, insertem
+    la còpia del diccionari  a la pila, visitem el codi i eliminem la còpia afegida, és a dir,
     fem un pop del primer element.
     '''
-    
+
     def visitCallFunc(self, ctx):
         l = list(ctx.getChildren())
         nParams = len(l) - 1
@@ -443,14 +443,14 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitReadStmt(self, ctx)
-    
+
     Retorna:
         Res.
     Comportament:
-    L'objectiu d'aquest mètode és llegir la informació que ve donada per la entrada i 
+    L'objectiu d'aquest mètode és llegir la informació que ve donada per la entrada i
     assignar-la a la variable que té com a nom el que s'indica al fer la lectura.
     '''
-    
+
     def visitReadStmt(self, ctx):
         l = list(ctx.getChildren())
         info = input()
@@ -459,16 +459,17 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitWriteStmt(self, ctx)
-    
+
     Retorna:
         Res.
     Comportament:
-    La funció principal d'aquesta funció és escriure la informació que ens ve donada 
-    després del símbol d'escriure. Cal destacar que es fa la distinció entre si el 
-    valor és un enter, és una llista, és una nota vàlida o, altrament, és una cadena 
-    de text. Una vegada s'ha acabat de construir el text final, s'imprimeix per 
+    La funció principal d'aquesta funció és escriure la informació que ens ve donada
+    després del símbol d'escriure. Cal destacar que es fa la distinció entre si el
+    valor és un enter, és una llista, és una nota vàlida o, altrament, és una cadena
+    de text. Una vegada s'ha acabat de construir el text final, s'imprimeix per
     pantalla.
     '''
+
     def visitWriteStmt(self, ctx):
         l = list(ctx.getChildren())
         n = len(l)
@@ -499,16 +500,16 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitSentenceIf(self, ctx)
-    
+
     Retorna:
         Res.
     Comportament:
     L'objectiu d'aquest mètode és comprovar si la condició booleana es certa o no,
-    i en cas de ser cert, haurà d'anar al bloc de codi que li correpon. Si no és 
+    i en cas de ser cert, haurà d'anar al bloc de codi que li correpon. Si no és
     certa la condició, llavors es comprova si hi ha la sentència else, i si existeix,
     visita la seva part del codi, en cas de no existir, ja no es fa res més.
     '''
-    
+
     def visitSentenceIf(self, ctx):
         l = list(ctx.getChildren())
         condition = self.visitRelExp(l[1])
@@ -517,18 +518,18 @@ class EvalVisitor(jsbachVisitor):
         elif len(l) == 9:
             self.visit(l[7])
 
-
     '''
     Mètode: visitAssigs(self, ctx)
-    
+
     Retorna:
         Res.
     Comportament:
     El comportament que té aquest mètode és assignar a la variable que té el nom
-    en key els valors corresponents. Si és una llista, es visita la constructora 
-    d'una llista, si és un valor unitari es visita l'expressió. A més, s'actualitza 
+    en key els valors corresponents. Si és una llista, es visita la constructora
+    d'una llista, si és un valor unitari es visita l'expressió. A més, s'actualitza
     el valor de la taula de símbols dins de la pila.
     '''
+
     def visitAssigs(self, ctx):
         l = list(ctx.getChildren())
         key = l[0].getText()
@@ -540,13 +541,14 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitSentenceWhile(self, ctx)
-    
+
     Retorna:
         Res.
     Comportament:
-    Aquesta funció el que fa és visitar el bloc de codi que està dins del cos del 
+    Aquesta funció el que fa és visitar el bloc de codi que està dins del cos del
     while mentre la condició sigui certa.
     '''
+
     def visitSentenceWhile(self, ctx):
         l = list(ctx.getChildren())
         while (True):
@@ -555,18 +557,18 @@ class EvalVisitor(jsbachVisitor):
                 break
             self.visit(l[3])
 
-
     '''
     Mètode: visitListConst(self, ctx)
-    
+
     Retorna: List
-    
+
     Comportament:
-    L'objectiu d'aquest mètode és construir una llista amb els valors 
-    que estan entre els limitadors. Els possibles valors d'una llista 
-    són notes o números. Es retorna la llista una vegada s'han afegit 
+    L'objectiu d'aquest mètode és construir una llista amb els valors
+    que estan entre els limitadors. Els possibles valors d'una llista
+    són notes o números. Es retorna la llista una vegada s'han afegit
     tots els valors auxiliars.
     '''
+
     def visitListConst(self, ctx):
         l = list(ctx.getChildren())
         n = len(l)
@@ -582,18 +584,18 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitListAddStmt(self, ctx)
-    
+
     Retorna:
         Res.
-        
+
     Comportament:
-    Aquesta funció comprova si existeix una llista a la taula de símbols 
+    Aquesta funció comprova si existeix una llista a la taula de símbols
     de la pila amb el nom corresponent, si no existeix llença la excepció.
-    En cas d'existir la llista, s'afegeix l'element corresponent i a més 
-    s'afegeix a la pila la nova llista actualitzada dins de la taula de 
+    En cas d'existir la llista, s'afegeix l'element corresponent i a més
+    s'afegeix a la pila la nova llista actualitzada dins de la taula de
     símbols.
     '''
-    
+
     def visitListAddStmt(self, ctx):
         l = list(ctx.getChildren())
         name_list = l[0].getText()
@@ -607,16 +609,16 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitListCutStmt(self, ctx)
-    
-    Retorna: 
+
+    Retorna:
         Res.
-    
+
     Comportament:
-    L'objectiu d'aquest mètode és comprovar si l'índex és vàlid i  que la llista amb el nom 
-    existeix. En cas d'existir i ser l'índex vàlid, elimina l'element i-èsim de la llista 
+    L'objectiu d'aquest mètode és comprovar si l'índex és vàlid i  que la llista amb el nom
+    existeix. En cas d'existir i ser l'índex vàlid, elimina l'element i-èsim de la llista
     i s'actualitza a la pila. En cas contrari, es llença l'excepció necessària.
     '''
-    
+
     def visitListCutStmt(self, ctx):
         l = list(ctx.getChildren())
         index = self.visit(l[3]) - 1
@@ -638,14 +640,14 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitListSize(self, ctx)
-    
+
     Retorna: Int
-    
+
     Comportament:
-    Aquesta funció retorna el nombre d'elements de la llista, però primerament es 
+    Aquesta funció retorna el nombre d'elements de la llista, però primerament es
     comprova si la llista existeix a la taula de símbols, sinò es llença excepció.
     '''
-    
+
     def visitListSize(self, ctx):
         l = list(ctx.getChildren())
         name_list = l[1].getText()
@@ -656,15 +658,16 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitListGet(self, ctx)
-    
+
     Retorna: Expressió
-    
+
     Comportament:
-    Aquest mètode comprova si existeix la llista a la taula de símbols 
-    de la funció en la pila i que l'índex és vàlid, si tot està bé es 
+    Aquest mètode comprova si existeix la llista a la taula de símbols
+    de la funció en la pila i que l'índex és vàlid, si tot està bé es
     retorna l'i-èsim element de la llista, tenint en compte que en JSBach
     comencen per 1 i en Python per 0.
     '''
+
     def visitListGet(self, ctx):
         l = list(ctx.getChildren())
         index = self.visit(l[2]) - 1
@@ -685,17 +688,18 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitPlayId(self, ctx)
-    
-    Retorna: 
+
+    Retorna:
         Res.
-    
+
     Comportament:
-    Aquesta funció comprova si existeix la variable a la taula de símbols. En 
-    cas de ser una llista de notes, es comprova que les notes siguin vàlides i 
-    s'afegeixen a la partitura, sinò es comprova si és un enter i està en el rang acceptat. 
-    Si és un número vàlid, s'afegeix a la partiturala nota que està associada a aquell valor, 
+    Aquesta funció comprova si existeix la variable a la taula de símbols. En
+    cas de ser una llista de notes, es comprova que les notes siguin vàlides i
+    s'afegeixen a la partitura, sinò es comprova si és un enter i està en el rang acceptat.
+    Si és un número vàlid, s'afegeix a la partitura la nota que està associada a aquell valor,
     en cas de no ser vàlid es llença l'excepció.
     '''
+
     def visitPlayId(self, ctx):
         l = list(ctx.getChildren())
         name_var = l[1].getText()
@@ -719,15 +723,16 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitPlayLists(self, ctx)
-    
-    Retorna: 
+
+    Retorna:
         Res.
-    
+
     Comportament:
-    L'objectiu d'aquest mètode és anar afegint els valors de la llista a la 
-    partitura per tal d'aconseguir tenir la partitura amb les notes o nombres 
+    L'objectiu d'aquest mètode és anar afegint els valors de la llista a la
+    partitura per tal d'aconseguir tenir la partitura amb les notes o nombres
     corresponents.
     '''
+
     def visitPlayLists(self, ctx):
         l = list(ctx.getChildren())
         list_notes = self.visitListConst(l[1])
@@ -736,16 +741,16 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitRelExp(self, ctx)
-    
+
     Retorna: Int
-    
+
     Comportament:
     Aquesta funció avalua els dos operands amb l'operador per tal de retornar
-    un valor com a cert (1 o més gran) o fals (0). Si un operand és una nota, 
-    es passa al valor enter que està associat a aquella nota per fer la 
+    un valor com a cert (1 o més gran) o fals (0). Si un operand és una nota,
+    es passa al valor enter que està associat a aquella nota per fer la
     comprovació.
     '''
-    
+
     def visitRelExp(self, ctx):
         l = list(ctx.getChildren())
         if len(l) == 1:
@@ -782,18 +787,19 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitAddSub(self, ctx)
-    
-    Retorna: 
+
+    Retorna:
         Nombre o Nota.
-    
+
     Comportament:
     Aquesta funció retorna la suma de dues expressions. En el cas de
     tenir una nota en algun dels dos operands, el que es fa és passar les notes
-    al valor enter que representen, s'operen i si el valor resultant és valid, 
-    es retorna en format de nota. Si no és valid el resultat es llença una 
-    excepció. Si cap dels operands és una nota, es retorna el valor resultant de 
+    al valor enter que representen, s'operen i si el valor resultant és valid,
+    es retorna en format de nota. Si no és valid el resultat es llença una
+    excepció. Si cap dels operands és una nota, es retorna el valor resultant de
     l'operació suma o resta.
     '''
+
     def visitAddSub(self, ctx):
         l = list(ctx.getChildren())
         exprL = self.visit(l[0])
@@ -832,29 +838,31 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitParentesis(self, ctx)
-    
-    Retorna: 
+
+    Retorna:
         Expressió.
-    
+
     Comportament:
     L'únic que fa aquesta funció és visitar i retornar l'expressió que està
     entre parèntesis.
     '''
+
     def visitParentesis(self, ctx):
         l = list(ctx.getChildren())
         return self.visit(l[1])
 
     '''
     Mètode: visitVarId(self, ctx)
-    
-    Retorna: 
+
+    Retorna:
         Expressió.
-    
+
     Comportament:
     Donat un nom d'una variable, es comprova si existeix a la taula de símbols
-    de la pila, si no existeix es llença l'excepció. En el cas d'estar present a 
+    de la pila, si no existeix es llença l'excepció. En el cas d'estar present a
     la taula, es retorna el valor que té la variable amb aquell nom.
     '''
+
     def visitVarId(self, ctx):
         if self.stack.existsInTs(ctx.getText()):
             var = self.stack.getInfoFunc()['ts'][ctx.getText()]
@@ -865,15 +873,16 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitNote(self, ctx)
-    
-    Retorna: 
+
+    Retorna:
         String-
-    
+
     Comportament:
     Aquesta funció comprova si la nota no té la octava explícitament (això vol dir
-    que pertany a la quarta). Si no la té, s'afegeix el valor de la quarta octava 
+    que pertany a la quarta). Si no la té, s'afegeix el valor de la quarta octava
     i es retorna el nou string. Si la té, es retorna directament el string-
     '''
+
     def visitNote(self, ctx: jsbachParser.NoteContext):
         length = len(ctx.getText())
         if length == 1:
@@ -886,31 +895,33 @@ class EvalVisitor(jsbachVisitor):
 
     '''
     Mètode: visitNum(self, ctx)
-    
-    Retorna: 
+
+    Retorna:
         Integer.
-    
+
     Comportament:
     Aquesta funció retorna el número en forma d'enter.
     '''
+
     def visitNum(self, ctx: jsbachParser.NumContext):
         return int(ctx.getText())
 
     '''
     Mètode: visitNum(self, ctx)
-    
-    Retorna: 
+
+    Retorna:
         Integer o Nota.
-    
+
     Comportament:
     Aquesta funció comprova si algun dels operands és una nota. En el cas de
     tenir una nota en algun dels dos operands, el que es fa és passar les notes
-    al valor enter que representen, s'operen i si el valor resultant és valid, 
-    es retorna en format de nota. Si no és valid el resultat es llença una 
-    excepció. Si cap dels operands és una nota, es retorna el valor resultant de 
-    l'operació. Quan és una divisió si l'operand de la dreta és un 0 es llença 
+    al valor enter que representen, s'operen i si el valor resultant és valid,
+    es retorna en format de nota. Si no és valid el resultat es llença una
+    excepció. Si cap dels operands és una nota, es retorna el valor resultant de
+    l'operació. Quan és una divisió si l'operand de la dreta és un 0 es llença
     l'excepció.
     '''
+
     def visitDivMulMod(self, ctx):
         l = list(ctx.getChildren())
         exprL = self.visit(l[0])
@@ -966,6 +977,8 @@ class EvalVisitor(jsbachVisitor):
 
 def main():
 
+    # Lectura de l'entrada
+
     if sys.argv[1].endswith('.jsb'):
         program_name = sys.argv[1].split('.')[0]
         input_stream = FileStream(sys.argv[1], encoding='utf-8')
@@ -984,9 +997,15 @@ def main():
     token_stream = CommonTokenStream(lexer)
     parser = jsbachParser(token_stream)
     tree = parser.root()
-    print(tree.toStringTree(recog=parser))
+    # Aquest print escriu per terminal l'arbre de sintaxi abstracta i ha sigut
+    # de molta ajuda per dur a terme la pràctica.
 
+    # print(tree.toStringTree(recog=parser))
+
+    # Obtenció de la llista de notes de la partitura
     notes = visitor.visit(tree)
+
+    # Generació de fitxers
 
     cjt_notes = Notes()
     generator_file = open('generador.lily', 'r')
@@ -1006,8 +1025,11 @@ def main():
     lilyFile.write("}")
     lilyFile.close()
 
+    # Generem l'arxiu program_name.wav i program_name.midi
     subprocess.call(shlex.split('lilypond ' + program_name + '.lily'))
+    # Generem l'arxiu program_name.pdf
     subprocess.call(shlex.split('timidity -Ow -o ' + program_name + '.wav ' + program_name + '.midi'))
+    # Generem l'arxiu program_name.mp3
     subprocess.call(shlex.split('ffmpeg -i ' + program_name + '.wav -codec:a libmp3lame -qscale:a 2 ' + program_name + '.mp3'))
 
     remove(program_name + '.lily')

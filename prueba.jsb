@@ -1,4 +1,6 @@
-Main |: 
-    x <- 1+2
-    <!> 8
+~~~ Kleines Program in JSBach ~~~
+
+Main |:
+    <!> "Hallo Bach"
+    <:> {B A C}
 :|
